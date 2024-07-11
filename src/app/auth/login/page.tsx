@@ -25,9 +25,7 @@ export default function Login() {
           router.push('/admin/dashboard');
         })
         .catch((e) => {
-          showErrorNotification(
-            `${MESSAGE.LOGIN_FAILED}${e.response.statusText}`
-          );
+          showErrorNotification(`${MESSAGE.LOGIN_FAILED}${e.message}`);
         });
     }
   };

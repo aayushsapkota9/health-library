@@ -1,17 +1,28 @@
 import Cookies from 'js-cookie';
 import { authService } from '../../services/index';
 import { User } from '../../types/user';
+import { useState } from 'react';
 
 export const useLogin = () => {
-  const login = async (username: string, password: string) => {
-    const user = await authService.login(username, password);
-    if (user) {
-      console.log(user, 'user is set');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-      Cookies.set('currentUser', JSON.stringify(user));
+  const login = async (username: string, password: string): Promise<User> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const user = await authService.login(username, password);
+      if (user) {
+        Cookies.set('currentUser', JSON.stringify(user));
+      }
+      return user;
+    } catch (error: any) {
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    return user as User;
   };
 
-  return { login };
+  return { login, loading, error };
 };

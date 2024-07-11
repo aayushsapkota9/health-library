@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { HttpService } from '.';
 import apiRoutes from '../config/api.config';
 
@@ -9,7 +10,7 @@ export class AuthService {
       password,
     });
     if (response.status !== 200) {
-      return null;
+      throw new Error(response.message);
     }
     const jwtToken = response.data.access_token;
     // eslint-disable-next-line
