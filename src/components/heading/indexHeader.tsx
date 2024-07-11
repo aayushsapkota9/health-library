@@ -1,14 +1,15 @@
 import { NavigateToCreate } from '../mantine';
 import Heading from './heading';
-interface Props {
+interface IIndexHeaderProps {
   title: string;
+  href: string;
 }
 
-const IndexHeader = ({ title }: Props) => {
+const IndexHeader = ({ title, href }: IIndexHeaderProps) => {
   return (
     <div className="table-top">
-      <Heading name={title + ' list'}></Heading>
-      <NavigateToCreate title={title}></NavigateToCreate>
+      <Heading name={`${title}s List`}></Heading>
+      <NavigateToCreate title={title} url={href}></NavigateToCreate>
     </div>
   );
 };

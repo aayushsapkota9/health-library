@@ -2,7 +2,7 @@ import FormWrapper from '@/src/components/wrappers/CreateWrapper';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { FormTitles } from '@/src/types/enums/formTitles.enums';
-import { FormProps, SupplierFrom } from '../../create/SupplierFormComponent';
+import { FormProps, SupplierFrom } from '../../create/DoctorRegistrationForm';
 
 const handleEditFormSubmit = async ({ values, params }: FormProps) => {
   'use server';

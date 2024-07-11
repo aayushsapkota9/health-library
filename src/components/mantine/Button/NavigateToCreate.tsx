@@ -2,23 +2,16 @@ import { COLOR } from '@/src/types/enums/colors.enums';
 import { Button } from '@mantine/core';
 import { IconCirclePlus } from '@tabler/icons-react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { headers } from 'next/headers';
 
 interface NavigateToCreateProps {
   title: string;
+  url: string;
 }
 
-const NavigateToCreate = ({ title }: NavigateToCreateProps) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const page = searchParams.get('page');
-
+const NavigateToCreate = ({ title, url }: NavigateToCreateProps) => {
   return (
-    <Button
-      component={Link}
-      href={`${pathname}/create${page ? `?page=${page}` : ''}`}
-      color={COLOR.primary}
-    >
+    <Button component={Link} href={url} color={COLOR.primary}>
       <IconCirclePlus className="mr-1" /> Add {title}
     </Button>
   );

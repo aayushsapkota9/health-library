@@ -4,6 +4,7 @@ export interface ElementWithIndex {
 }
 
 export function addIndicesToElements(elements: any[]): ElementWithIndex[] {
+  if (!elements) return [];
   return elements.map((element: any, index: number) => ({
     ...element,
     index: index + 1,

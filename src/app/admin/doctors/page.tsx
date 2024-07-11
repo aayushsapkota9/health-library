@@ -1,10 +1,10 @@
-import { CustomTable } from '@/src/components/mantine';
+import { CustomPagination, CustomTable } from '@/src/components/mantine';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { addIndicesToElements } from '@/src/utils/addIndicesToElements';
-import SupplierClientComponent, {
-  SupplierActionButton,
-} from './SupplierClient';
+import { SupplierActionButton } from './SupplierClient';
+import IndexHeader from '@/src/components/heading/indexHeader';
+import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
   const http = new HttpService();
   const response: any = await http
@@ -29,15 +29,25 @@ const Supplier = async ({
     { key: 'address', displayName: 'Address' },
     { key: 'phone', displayName: 'Phone' },
   ];
+  const breadCrumps = [
+    { title: 'Admin', href: '/admin/dashboard' },
+    { title: 'Doctors', href: '/admin/doctors' },
+  ];
 
   return (
-    <SupplierClientComponent>
+    <div>
+      <CustomBreadCrumps items={breadCrumps}></CustomBreadCrumps>
+      <IndexHeader
+        title={'Doctor'}
+        href={'/admin/doctors/create'}
+      ></IndexHeader>
       <CustomTable
         columns={columns}
         elements={tableData}
         actions={SupplierActionButton}
       />
-    </SupplierClientComponent>
+      <CustomPagination totalPages={1} />
+    </div>
   );
 };
 
