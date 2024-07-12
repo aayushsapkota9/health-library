@@ -1,15 +1,22 @@
+'use client';
 import FormWrapper from '@/src/components/wrappers/CreateWrapper';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { FormTitles } from '@/src/types/enums/formTitles.enums';
-import { FormProps, SupplierFrom } from '../../create/DoctorRegistrationForm';
+import {
+  ISupplierFromValue,
+  SupplierFrom,
+} from '../../create/DoctorRegistrationForm';
 
-const handleEditFormSubmit = async ({ values, params }: FormProps) => {
-  'use server';
+const handleCreateFormSubmit = async ({
+  values,
+}: {
+  values: ISupplierFromValue;
+}) => {
   const http = new HttpService();
   const response: any = await http
     .service()
-    .update(apiRoutes.suppliers.suppliersById(params.id), values);
+    .push(apiRoutes.suppliers.supplier, values);
   return response;
 };
 
@@ -18,7 +25,7 @@ export default function Page() {
     <FormWrapper headerTitle="Edit Supplier">
       <SupplierFrom
         submitTitle={FormTitles.update}
-        handleFormSubmit={handleEditFormSubmit}
+        handleFormSubmit={handleCreateFormSubmit}
       />{' '}
     </FormWrapper>
   );

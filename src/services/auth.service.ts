@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { HttpService } from '.';
 import apiRoutes from '../config/api.config';
 

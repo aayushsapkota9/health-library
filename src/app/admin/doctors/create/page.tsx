@@ -1,15 +1,15 @@
+'use client';
 import FormWrapper from '@/src/components/wrappers/CreateWrapper';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { FormTitles } from '@/src/types/enums/formTitles.enums';
-import { SupplierFrom, SupplierFromValue } from './DoctorRegistrationForm';
+import { ISupplierFromValue, SupplierFrom } from './DoctorRegistrationForm';
 
 const handleCreateFormSubmit = async ({
   values,
 }: {
-  values: SupplierFromValue;
+  values: ISupplierFromValue;
 }) => {
-  'use server';
   const http = new HttpService();
   const response: any = await http
     .service()
