@@ -4,7 +4,7 @@ import apiRoutes from '../config/api.config';
 export class AuthService {
   login = async (username: string, password: string) => {
     const http = new HttpService();
-    const response: any = await http.service().push(apiRoutes.auth.login, {
+    const response: any = await http.service().post(apiRoutes.auth.login, {
       email: username,
       password,
     });

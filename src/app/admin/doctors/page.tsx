@@ -9,7 +9,7 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
   const http = new HttpService();
   const response: any = await http
     .service()
-    .get(apiRoutes.suppliers.getAllSuppliers(`page=${page}&limit=10`), {
+    .get(apiRoutes.doctors.getAllSuppliers(`page=${page}&limit=10`), {
       next: {
         cache: 'no-store',
       },
