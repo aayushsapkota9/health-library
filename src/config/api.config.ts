@@ -2,11 +2,11 @@ const apiRoutes = {
   auth: {
     login: '/auth/login',
   },
-  suppliers: {
-    supplier: '/supplier',
-    suppliersById: (id: any) => `/supplier/${id}`,
-    getAllSuppliers: (params?: string) => `/supplier?${params}`,
-    searchSuppliers: `/supplier/find/`,
+  doctors: {
+    doctors: '/doctors',
+    suppliersById: (id: any) => `/doctors/${id}`,
+    getAllSuppliers: (params?: string) => `/doctors?${params}`,
+    searchSuppliers: `/doctors/find/`,
   },
 };
 

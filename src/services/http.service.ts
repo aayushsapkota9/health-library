@@ -22,7 +22,7 @@ class HttpService {
   // Set up request headers
   private setupHeaders(hasAttachment = false): Record<string, string> {
     return hasAttachment
-      ? { 'Content-Type': 'multipart/form-data', ...this.getAuthorization() }
+      ? { ...this.getAuthorization() }
       : { 'Content-Type': 'application/json', ...this.getAuthorization() };
   }
 
@@ -30,7 +30,6 @@ class HttpService {
   private async request<T>(
     method: EHttpMethod,
     url: string,
-    // eslint-disable-next-line no-undef
     options: RequestInit
   ): Promise<T> {
     try {
@@ -56,7 +55,6 @@ class HttpService {
     customOptions: Record<string, any> = {}
   ): Promise<T> {
     const hasAttachment = false;
-    // eslint-disable-next-line no-undef
     const options: RequestInit = {
       headers: this.setupHeaders(hasAttachment),
       ...customOptions,
@@ -65,8 +63,8 @@ class HttpService {
     return this.request<T>(EHttpMethod.GET, url, options);
   }
 
-  // Perform POST request
-  public async push<T, P>(
+  // Perform POST request with JSON payload
+  public async post<T, P>(
     url: string,
     payload: P,
     hasAttachment = false
@@ -74,6 +72,14 @@ class HttpService {
     return this.request<T>(EHttpMethod.POST, url, {
       body: JSON.stringify(payload),
       headers: this.setupHeaders(hasAttachment),
+    });
+  }
+
+  // Perform POST request with FormData
+  public async postFormData<T>(url: string, formData: FormData): Promise<T> {
+    return this.request<T>(EHttpMethod.POST, url, {
+      body: formData,
+      headers: this.setupHeaders(true), // Set isFormData to true
     });
   }
 
@@ -103,4 +109,4 @@ class HttpService {
   }
 }
 
-export { HttpService as default };
+export default HttpService;

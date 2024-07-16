@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 
 export interface ISupplierFromValue {
   fullName: string;
-  address: string;
+  fullAddress: string;
   phoneNo: string;
   email: string;
   password: string;
@@ -37,7 +37,7 @@ export const SupplierFrom = ({
   const form = useForm<ISupplierFromValue>({
     initialValues: {
       fullName: '',
-      address: '',
+      fullAddress: '',
       phoneNo: '',
       email: '',
       password: '',
@@ -48,9 +48,9 @@ export const SupplierFrom = ({
     },
     validate: {
       fullName: (value) =>
-        value.length < 2 ? 'Name must have at least 2 letters' : null,
+        value.length < 4 ? 'Name must have at least 4 letters' : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      address: (value) =>
+      fullAddress: (value) =>
         value.length < 2 ? 'Address must have at least 2 letters' : null,
       phoneNo: (value) =>
         value.length < 7 ? 'Phone must have at least 7 letters' : null,
@@ -66,7 +66,7 @@ export const SupplierFrom = ({
     const http = new HttpService();
     const response: any = await http
       .service()
-      .get(apiRoutes.suppliers.suppliersById(id));
+      .get(apiRoutes.doctors.suppliersById(id));
     response?.status === 200 && form.setValues(response.data);
   };
 
@@ -76,6 +76,17 @@ export const SupplierFrom = ({
     });
     if (response?.status === 200 && !id) {
       form.reset();
+    }
+    if (
+      response.statusCode === 400 &&
+      response.errorFields &&
+      response.errorFields.length >= 1
+    ) {
+      response.errorFields.forEach(
+        (item: { field: string; message: string }) => {
+          form.setFieldError(`${item.field}`, item.message);
+        }
+      );
     }
     showNotificationOnRes(response);
   };
@@ -100,7 +111,7 @@ export const SupplierFrom = ({
             placeholder="Enter your address"
             required
             withAsterisk
-            {...form.getInputProps('address')}
+            {...form.getInputProps('fullAddress')}
           />
           <TextInput
             label="Organization"
