@@ -16,7 +16,7 @@ const handleCreateFormSubmit = async ({
   const http = new HttpService();
   const response: any = await http
     .service()
-    .push(apiRoutes.suppliers.supplier, values);
+    .update(apiRoutes.doctors.doctors, values);
   return response;
 };
 
