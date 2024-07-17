@@ -5,6 +5,6 @@ enum SortOrder {
 export const paginationConfig = {
   limit: 15,
   page: 1,
-  sortOrder: SortOrder.asc,
+  sortOrder: SortOrder.desc,
   sortBy: 'createdAt',
 };
