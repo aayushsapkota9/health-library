@@ -4,8 +4,8 @@ const apiRoutes = {
   },
   doctors: {
     doctors: '/doctors',
-    suppliersById: (id: any) => `/doctors/${id}`,
-    getAllSuppliers: (params?: string) => `/doctors?${params}`,
+    doctorById: (id: string | number) => `/doctors/${id}`,
+    getAllDoctors: (params?: string) => `/doctors?${params}`,
     searchSuppliers: `/doctors/find/`,
   },
 };

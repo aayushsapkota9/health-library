@@ -16,14 +16,14 @@ export interface ISupplierFromValue {
   password: string;
   confirmPassword?: string;
   organization: string;
-  documentFront: File | '';
-  documentBack: File | '';
+  documentFront: File | string;
+  documentBack: File | string;
 }
 export interface FormProps {
   values: ISupplierFromValue;
 }
 
-export const SupplierFrom = ({
+export const DoctorRegistrationFrom = ({
   submitTitle,
   handleFormSubmit,
   id,
@@ -55,19 +55,33 @@ export const SupplierFrom = ({
       phoneNo: (value) =>
         value.length < 7 ? 'Phone must have at least 7 letters' : null,
       password: (value) =>
-        value.length < 8 ? 'Password must have at least 8 letters' : null,
+        value.length < 8 && !id
+          ? 'Password must have at least 8 letters'
+          : null,
       confirmPassword: (value, values) =>
-        value != values.password ? 'Password does not match' : null,
+        value != values.password && !id ? 'Password does not match' : null,
       organization: (value) =>
-        value.length < 2 ? 'Organization must have at least 2 letters' : null,
+        value.length < 2 && !id
+          ? 'Organization must have at least 2 letters'
+          : null,
     },
   });
   const getFieldData = async () => {
     const http = new HttpService();
     const response: any = await http
       .service()
-      .get(apiRoutes.doctors.suppliersById(id));
-    response?.status === 200 && form.setValues(response.data);
+      .get(apiRoutes.doctors.doctorById(id as string));
+    const data = response.data;
+    const defaultValues = {
+      fullName: data.user.fullName,
+      email: data.user.email,
+      fullAddress: data.fullAddress,
+      phoneNo: data.phoneNo,
+      organization: data.organization,
+      documentFront: data.documentFront,
+      documentBack: data.documentBack,
+    };
+    response?.status === 200 && form.setValues(defaultValues);
   };
 
   const handleLocalFormSubmit = async () => {
@@ -138,21 +152,21 @@ export const SupplierFrom = ({
           <PasswordInput
             label="Password"
             placeholder="Enter your password"
-            required
-            withAsterisk
+            required={!id}
+            withAsterisk={!id}
             {...form.getInputProps('password')}
           />
           <PasswordInput
             label="Confirm Password"
             placeholder="Confirm your password"
-            required
-            withAsterisk
+            required={!id}
+            withAsterisk={!id}
             {...form.getInputProps('confirmPassword')}
           />
           <FileInput
             label="Document Front"
-            required
-            withAsterisk
+            required={!id}
+            withAsterisk={!id}
             rightSection={
               <>
                 <IconUpload></IconUpload>
@@ -162,8 +176,8 @@ export const SupplierFrom = ({
           />
           <FileInput
             label="Document Back"
-            required
-            withAsterisk
+            required={!id}
+            withAsterisk={!id}
             rightSection={
               <>
                 <IconUpload></IconUpload>

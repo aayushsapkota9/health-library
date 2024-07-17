@@ -6,15 +6,9 @@ export const sidebarConfig = [
     roles: ['admin'],
   },
   {
-    label: 'Suppliers',
-    key: 'suppliers',
+    label: 'Doctors',
+    key: 'doctors',
     link: '/admin/doctors',
-    roles: ['admin'],
-  },
-  {
-    label: 'Products',
-    key: 'products',
-    link: '/admin/products',
     roles: ['admin'],
   },
 ];

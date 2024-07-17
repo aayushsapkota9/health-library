@@ -82,7 +82,12 @@ class HttpService {
       headers: this.setupHeaders(true), // Set isFormData to true
     });
   }
-
+  public async patchFormData<T>(url: string, formData: FormData): Promise<T> {
+    return this.request<T>(EHttpMethod.PUT, url, {
+      body: formData,
+      headers: this.setupHeaders(true), // Set isFormData to true
+    });
+  }
   // Perform UPDATE request
   public async update<T, P>(
     url: string,

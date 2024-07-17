@@ -3,8 +3,12 @@ import FormWrapper from '@/src/components/wrappers/CreateWrapper';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { FormTitles } from '@/src/types/enums/formTitles.enums';
-import { ISupplierFromValue, SupplierFrom } from './DoctorRegistrationForm';
+import {
+  ISupplierFromValue,
+  DoctorRegistrationFrom,
+} from './DoctorRegistrationForm';
 import { objectToFormData } from '@/src/utils/formdata.append';
+import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 
 const handleCreateFormSubmit = async ({
   values,
@@ -19,14 +23,22 @@ const handleCreateFormSubmit = async ({
     .postFormData(apiRoutes.doctors.doctors, formData);
   return response;
 };
+const breadCrumps = [
+  { title: 'Admin', href: '/admin/dashboard' },
+  { title: 'Doctors', href: '/admin/doctors' },
+  { title: 'Create', href: '/admin/doctors/create' },
+];
 
 export default function Page() {
   return (
-    <FormWrapper headerTitle="Create Supplier">
-      <SupplierFrom
-        submitTitle={FormTitles.create}
-        handleFormSubmit={handleCreateFormSubmit}
-      />{' '}
-    </FormWrapper>
+    <div>
+      <CustomBreadCrumps items={breadCrumps}></CustomBreadCrumps>
+      <FormWrapper headerTitle="Create Doctor">
+        <DoctorRegistrationFrom
+          submitTitle={FormTitles.create}
+          handleFormSubmit={handleCreateFormSubmit}
+        />{' '}
+      </FormWrapper>
+    </div>
   );
 }

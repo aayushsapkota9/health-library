@@ -1,11 +1,8 @@
-export interface ElementWithIndex {
-  index: number;
-  [key: string]: any; // Other properties can be of any type
-}
+export type ElementWithIndex<T> = T & { index: number };
 
-export function addIndicesToElements(elements: any[]): ElementWithIndex[] {
+export function addIndicesToElements<T>(elements: T[]): ElementWithIndex<T>[] {
   if (!elements) return [];
-  return elements.map((element: any, index: number) => ({
+  return elements.map((element: T, index: number) => ({
     ...element,
     index: index + 1,
   }));

@@ -48,7 +48,9 @@ export default function DeletePopover({ url }: PopoverProps) {
         <Text size="sm">Are you sure you want to delete this?</Text>
         <Group mt="xl">
           <Button onClick={() => setOpened(false)}>No</Button>
-          <Button onClick={() => deleteSuppliers()}>Yes</Button>
+          <Button color="red" onClick={() => deleteSuppliers()}>
+            Yes
+          </Button>
         </Group>
       </PopoverDropdown>
     </Popover>
