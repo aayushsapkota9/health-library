@@ -16,7 +16,7 @@ export function CustomBreadCrumps({ items }: BreadcrumbsProps) {
   ));
   return (
     <>
-      <Breadcrumbs separator="/">{crumps}</Breadcrumbs>
+      <Breadcrumbs separator="->">{crumps}</Breadcrumbs>
     </>
   );
 }

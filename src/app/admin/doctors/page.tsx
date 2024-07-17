@@ -8,6 +8,7 @@ import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBr
 import { Suspense } from 'react';
 import Loading from '../../loading';
 import { ISupplierFromValue } from './create/DoctorRegistrationForm';
+import { paginationConfig } from '@/src/config/pagination.config';
 type ColumnKey = keyof ISupplierFromValue | 'index';
 
 interface Column {
@@ -26,11 +27,17 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
 
   const response: any = await http
     .service()
-    .get(apiRoutes.doctors.getAllDoctors(`page=${page}&limit=10`), {
-      next: {
-        cache: 'no-store',
-      },
-    });
+    .get(
+      apiRoutes.doctors.getAllDoctors(
+        `page=${page}&limit=${paginationConfig.limit}&sortBy=${paginationConfig.sortBy}&sortOrder=${paginationConfig.sortOrder}`
+      ),
+      {
+        next: {
+          cache: 'no-store',
+        },
+      }
+    );
+  console.log(response);
   const data: ISupplierFromValue[] = response?.data?.result.map(
     (item: Element) => {
       return {
@@ -40,7 +47,10 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
     }
   );
   const indexedElements = addIndicesToElements(data);
-  return indexedElements;
+  return {
+    tableData: indexedElements,
+    total: response?.data?.totalCount,
+  };
 };
 
 const Supplier = async ({
@@ -48,7 +58,7 @@ const Supplier = async ({
 }: {
   searchParams: { page: string };
 }) => {
-  const tableData = await getTableData({ page: searchParams.page });
+  const { tableData, total } = await getTableData({ page: searchParams.page });
   const columns: Column[] = [
     { key: 'index', displayName: 'Index' },
     { key: 'fullName', displayName: 'Name' },
@@ -74,7 +84,8 @@ const Supplier = async ({
           actions={SupplierActionButton}
         />
       </Suspense>
-      <CustomPagination totalPages={1} />
+
+      <CustomPagination totalPages={total} />
     </div>
   );
 };

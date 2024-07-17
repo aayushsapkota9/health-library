@@ -1,4 +1,5 @@
 'use client';
+import { paginationConfig } from '@/src/config/pagination.config';
 import { COLOR } from '@/src/types/enums/colors.enums';
 import { Pagination } from '@mantine/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -23,7 +24,7 @@ const CustomPagination = ({ totalPages }: { totalPages: number }) => {
       onChange={(e) => {
         router.push(pathname + '?' + createQueryString('page', e.toString()));
       }}
-      total={totalPages}
+      total={Math.ceil(totalPages / paginationConfig.limit)}
       value={parseInt(searchParams.get('page') || '1')}
     />
   );
