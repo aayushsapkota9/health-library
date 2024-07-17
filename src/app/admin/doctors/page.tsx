@@ -37,7 +37,6 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
         },
       }
     );
-  console.log(response);
   const data: ISupplierFromValue[] = response?.data?.result.map(
     (item: Element) => {
       return {
