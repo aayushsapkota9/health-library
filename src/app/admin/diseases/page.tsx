@@ -61,7 +61,7 @@ const Supplier = async ({
   const columns: Column[] = [{ key: 'index', displayName: 'Index' }];
   const breadCrumps = [
     { title: 'Admin', href: '/admin/dashboard' },
-    { title: 'Doctors', href: '/admin/diseases' },
+    { title: 'Diseases', href: '/admin/diseases' },
   ];
 
   return (

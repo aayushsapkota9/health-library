@@ -8,7 +8,7 @@ interface NavigateToIndexProps {
   title: string;
 }
 
-const NavigateToCreate = ({ title }: NavigateToIndexProps) => {
+const NavigateToCreate = () => {
   const router = useRouter();
   const pathname = usePathname();
   let updatedPathname = '';
@@ -35,7 +35,7 @@ const NavigateToCreate = ({ title }: NavigateToIndexProps) => {
       }}
       color={COLOR.primary}
     >
-      <IconList className="mr-1" /> Back to {title}
+      <IconList className="mr-1" /> Go Back
     </Button>
   );
 };

@@ -28,6 +28,7 @@
     "@mantine/next": "^6.0.21",
     "@mantine/notifications": "^7.5.2",
     "@tabler/icons-react": "^2.47.0",
+    "@tinymce/tinymce-react": "^5.1.1",
     "axios": "^1.6.7",
     "commitlint": "^19.3.0",
     "cross-env": "^7.0.3",

@@ -30,7 +30,7 @@ export default function Page() {
   return (
     <div>
       <CustomBreadCrumps items={breadCrumps}></CustomBreadCrumps>
-      <FormWrapper headerTitle="Create Disease">
+      <FormWrapper headerTitle="Write about a Disease">
         <DoctorRegistrationFrom
           submitTitle={FormTitles.create}
           handleFormSubmit={handleCreateFormSubmit}

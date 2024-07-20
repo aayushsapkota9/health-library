@@ -8,7 +8,7 @@ const FormHeader = ({ title }: Props) => {
   return (
     <div className="table-top">
       <Heading name={title}></Heading>
-      <NavigateToIndex title={title}></NavigateToIndex>
+      <NavigateToIndex></NavigateToIndex>
     </div>
   );
 };

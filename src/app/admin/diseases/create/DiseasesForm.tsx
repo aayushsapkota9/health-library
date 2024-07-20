@@ -1,12 +1,12 @@
 'use client';
+import TinyMceEditorWithTemplate from '@/src/components/Editor/TinyMceWithTemplate/TinyMceTemplate';
 import FormFooter from '@/src/components/layouts/formFooter';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { showNotificationOnRes } from '@/src/utils/notificationUtils';
-import { FileInput, PasswordInput, SimpleGrid, TextInput } from '@mantine/core';
+import { SimpleGrid, Textarea, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconUpload } from '@tabler/icons-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export interface ISupplierFromValue {
   title: string;
@@ -35,6 +35,7 @@ export const DoctorRegistrationFrom = ({
         value.length < 4 ? 'Name must have at least 4 letters' : null,
     },
   });
+  const editorRef = useRef(null);
   const getFieldData = async () => {
     const http = new HttpService();
     const response: any = await http
@@ -75,7 +76,7 @@ export const DoctorRegistrationFrom = ({
   return (
     <div>
       <form onSubmit={form.onSubmit(handleLocalFormSubmit)}>
-        <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }}>
+        <SimpleGrid cols={{ base: 1, sm: 1, lg: 1 }} className="mb-4">
           <TextInput
             label="Title"
             placeholder="eg. Jaundice"
@@ -84,6 +85,16 @@ export const DoctorRegistrationFrom = ({
             {...form.getInputProps('fullName')}
           />
         </SimpleGrid>
+        <TinyMceEditorWithTemplate
+          editorRef={editorRef}
+        ></TinyMceEditorWithTemplate>
+        <Textarea
+          label="References"
+          placeholder="eg. https://www.who.int/emergencies/diseases"
+          required
+          withAsterisk
+          {...form.getInputProps('fullName')}
+        />
         <FormFooter title={submitTitle}></FormFooter>
       </form>
     </div>
