@@ -7,12 +7,15 @@ import { showNotificationOnRes } from '@/src/utils/notificationUtils';
 import { SimpleGrid, Textarea, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect, useRef } from 'react';
+import { Editor as TinyMCEEditor } from 'tinymce';
 
-export interface ISupplierFromValue {
-  title: string;
+export interface IDiseasesFormValue {
+  name: string;
+  html: string;
+  references: string;
 }
 export interface FormProps {
-  values: ISupplierFromValue;
+  values: IDiseasesFormValue;
 }
 
 export const DoctorRegistrationFrom = ({
@@ -26,16 +29,20 @@ export const DoctorRegistrationFrom = ({
   }: FormProps) => void;
   id?: string;
 }) => {
-  const form = useForm<ISupplierFromValue>({
+  const form = useForm<IDiseasesFormValue>({
     initialValues: {
-      title: '',
+      name: '',
+      html: '',
+      references: '',
     },
     validate: {
-      title: (value) =>
+      name: (value) =>
         value.length < 4 ? 'Name must have at least 4 letters' : null,
+      references: (value) =>
+        value.length < 2 ? 'References must have at least 2 letters' : null,
     },
   });
-  const editorRef = useRef(null);
+  const editorRef = useRef<TinyMCEEditor | null>(null);
   const getFieldData = async () => {
     const http = new HttpService();
     const response: any = await http
@@ -44,16 +51,19 @@ export const DoctorRegistrationFrom = ({
     const data = response.data;
     const defaultValues = {
       title: data.title,
+      html: data.html,
+      references: data.references,
     };
     response?.status === 200 && form.setValues(defaultValues);
   };
 
   const handleLocalFormSubmit = async () => {
+    form.setFieldValue('html', editorRef.current?.getContent() as string);
     const response: any = await handleFormSubmit({
       values: form.values,
     });
     if (response?.status === 200 && !id) {
-      form.reset();
+      // form.reset();
     }
     if (
       response.statusCode === 400 &&
@@ -78,22 +88,26 @@ export const DoctorRegistrationFrom = ({
       <form onSubmit={form.onSubmit(handleLocalFormSubmit)}>
         <SimpleGrid cols={{ base: 1, sm: 1, lg: 1 }} className="mb-4">
           <TextInput
-            label="Title"
+            label="Name"
             placeholder="eg. Jaundice"
             required
             withAsterisk
-            {...form.getInputProps('fullName')}
+            {...form.getInputProps('name')}
           />
         </SimpleGrid>
         <TinyMceEditorWithTemplate
           editorRef={editorRef}
         ></TinyMceEditorWithTemplate>
+        {form.errors.html && (
+          <div className="text-red-500">{JSON.stringify(form.errors.html)}</div>
+        )}
+        {JSON.stringify(form.errors)}
         <Textarea
           label="References"
           placeholder="eg. https://www.who.int/emergencies/diseases"
           required
           withAsterisk
-          {...form.getInputProps('fullName')}
+          {...form.getInputProps('references')}
         />
         <FormFooter title={submitTitle}></FormFooter>
       </form>

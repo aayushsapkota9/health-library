@@ -20,7 +20,7 @@ export default function Login() {
       showWarningNotification(MESSAGE.ENTER_CREDENTIALS);
     } else {
       login(name, password)
-        .then(() => {
+        .then((res) => {
           showSuccessNotification(MESSAGE.LOGIN_SUCCESS);
           router.push('/admin/dashboard');
         })

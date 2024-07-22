@@ -10,8 +10,9 @@ class HttpService {
 
   // Get authorization token for requests
   private getAuthorization(): Record<string, string> {
-    const accessToken = Cookies.get('AccessToken') || '';
-    return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+    const accessToken = Cookies.get('currentUser') || '';
+    const obj = JSON.parse(accessToken);
+    return accessToken ? { Authorization: `Bearer ${obj.accessToken}` } : {};
   }
 
   // Initialize service configuration

@@ -3,21 +3,19 @@ import FormWrapper from '@/src/components/wrappers/CreateWrapper';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { FormTitles } from '@/src/types/enums/formTitles.enums';
-import { ISupplierFromValue, DoctorRegistrationFrom } from './DiseasesForm';
+import { IDiseasesFormValue, DoctorRegistrationFrom } from './DiseasesForm';
 import { objectToFormData } from '@/src/utils/formdata.append';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 
 const handleCreateFormSubmit = async ({
   values,
 }: {
-  values: ISupplierFromValue;
+  values: IDiseasesFormValue;
 }) => {
   const http = new HttpService();
-  let formData = objectToFormData(values);
-
   const response: any = await http
     .service()
-    .postFormData(apiRoutes.doctors.doctors, formData);
+    .post(apiRoutes.diseases.diseases, values);
   return response;
 };
 const breadCrumps = [
