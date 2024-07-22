@@ -7,15 +7,15 @@ import IndexHeader from '@/src/components/heading/indexHeader';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 import { Suspense } from 'react';
 import Loading from '../../loading';
-import { ISupplierFromValue } from './create/DiseasesForm';
+import { IDiseasesFormValue } from './create/DiseasesForm';
 import { paginationConfig } from '@/src/config/pagination.config';
-type ColumnKey = keyof ISupplierFromValue | 'index';
+type ColumnKey = keyof IDiseasesFormValue | 'index';
 
 interface Column {
   key: ColumnKey;
   displayName: string;
 }
-interface Element extends ISupplierFromValue {
+interface Element extends IDiseasesFormValue {
   user: {
     id: string;
     fullName: string;
@@ -37,7 +37,7 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
         },
       }
     );
-  const data: ISupplierFromValue[] = response?.data?.result.map(
+  const data: IDiseasesFormValue[] = response?.data?.result.map(
     (item: Element) => {
       return {
         ...item,
