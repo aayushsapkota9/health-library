@@ -6,9 +6,9 @@ import { FormTitles } from '@/src/types/enums/formTitles.enums';
 import { objectToFormData } from '@/src/utils/formdata.append';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 import {
-  IDiseasesFormValue,
-  DoctorRegistrationFrom,
-} from '../../create/DiseasesForm';
+  HospitalRegistrationForm,
+  IHospitalFromValue,
+} from '../../create/HospitalRegistrationForm';
 import { useParams } from 'next/navigation';
 
 export default function Page() {
@@ -17,12 +17,16 @@ export default function Page() {
   const handleCreateFormSubmit = async ({
     values,
   }: {
-    values: IDiseasesFormValue;
+    values: IHospitalFromValue;
   }) => {
     const http = new HttpService();
+    let formData = objectToFormData(values);
     const response: any = await http
       .service()
-      .update(apiRoutes.diseases.diseaseById(params.id as string), values);
+      .patchFormData(
+        apiRoutes.doctors.doctorById(params.id as string),
+        formData
+      );
     return response;
   };
   const breadCrumps = [
@@ -34,7 +38,7 @@ export default function Page() {
     <div>
       <CustomBreadCrumps items={breadCrumps}></CustomBreadCrumps>
       <FormWrapper headerTitle="Edit Doctor">
-        <DoctorRegistrationFrom
+        <HospitalRegistrationForm
           submitTitle={FormTitles.update}
           handleFormSubmit={handleCreateFormSubmit}
           id={params.id as string}

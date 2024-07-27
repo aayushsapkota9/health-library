@@ -7,7 +7,7 @@ import React from 'react';
 export const SupplierActionButton = ({ id }: { id: string }) => {
   return (
     <>
-      <DeletePopover url={apiRoutes.diseases.diseaseById(id)}></DeletePopover>
+      <DeletePopover url={apiRoutes.doctors.doctorById(id)}></DeletePopover>
       <NavigateToEdit id={id}></NavigateToEdit>
     </>
   );

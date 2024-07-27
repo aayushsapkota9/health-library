@@ -1,14 +1,27 @@
 'use client';
 import FormFooter from '@/src/components/layouts/formFooter';
 import apiRoutes from '@/src/config/api.config';
+import { paginationConfig } from '@/src/config/pagination.config';
+import { DEPARTMENTS } from '@/src/constants/Departments';
 import { HttpService } from '@/src/services';
+import { DepartmentValue } from '@/src/types/enums/department.enums';
 import { showNotificationOnRes } from '@/src/utils/notificationUtils';
-import { FileInput, PasswordInput, SimpleGrid, TextInput } from '@mantine/core';
+import {
+  AspectRatio,
+  FileInput,
+  Flex,
+  PasswordInput,
+  rem,
+  Select,
+  SimpleGrid,
+  TextInput,
+  Text,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconUpload } from '@tabler/icons-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export interface ISupplierFromValue {
+export interface IDoctorFormValues {
   fullName: string;
   fullAddress: string;
   phoneNo: string;
@@ -18,9 +31,11 @@ export interface ISupplierFromValue {
   organization: string;
   documentFront: File | string;
   documentBack: File | string;
+  hospital: string;
+  departments: string[];
 }
 export interface FormProps {
-  values: ISupplierFromValue;
+  values: IDoctorFormValues;
 }
 
 export const DoctorRegistrationFrom = ({
@@ -34,7 +49,9 @@ export const DoctorRegistrationFrom = ({
   }: FormProps) => void;
   id?: string;
 }) => {
-  const form = useForm<ISupplierFromValue>({
+  const [hospitals, setHospitals] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const form = useForm<IDoctorFormValues>({
     initialValues: {
       fullName: '',
       fullAddress: '',
@@ -45,6 +62,8 @@ export const DoctorRegistrationFrom = ({
       organization: '',
       documentFront: '',
       documentBack: '',
+      hospital: '',
+      departments: [],
     },
     validate: {
       fullName: (value) =>
@@ -83,6 +102,71 @@ export const DoctorRegistrationFrom = ({
     };
     response?.status === 200 && form.setValues(defaultValues);
   };
+  const getHospitalData = async () => {
+    const http = new HttpService();
+
+    const response: any = await http
+      .service()
+      .get(
+        apiRoutes.hospital.get(
+          `page=${1}&limit=${0}&sortBy=${paginationConfig.sortBy}&sortOrder=${paginationConfig.sortOrder}`
+        ),
+        {
+          next: {
+            cache: 'no-store',
+          },
+        }
+      );
+    const transformedData = response?.data?.result.map((item: any) => {
+      return {
+        label: item.name,
+        value: item.id,
+      };
+    });
+    setHospitals(transformedData);
+  };
+  const getDepartmentDataForHospital = async () => {
+    const http = new HttpService();
+
+    const response: any = await http
+      .service()
+      .get(apiRoutes.hospital.getById(`${form.values.hospital}`), {
+        next: {
+          cache: 'no-store',
+        },
+      });
+    const filterDepartments = (departmentNames: any) => {
+      return DEPARTMENTS.filter(
+        (department) =>
+          departmentNames?.includes(department?.name?.toLowerCase())
+      );
+    };
+    const availableDepartments = response?.data?.departments.map(
+      (item: any) => item.value
+    );
+
+    const departments = filterDepartments(availableDepartments);
+    if (availableDepartments?.length >= 1) {
+      setDepartments(departments as any);
+    }
+  };
+  const handleDepartment = (departmentValue: DepartmentValue) => {
+    const isSelected = form.values.departments.includes(departmentValue);
+
+    if (isSelected) {
+      // Remove the department
+      form.setFieldValue(
+        'departments',
+        form.values.departments.filter((value) => value !== departmentValue)
+      );
+    } else {
+      // Add the department
+      form.setFieldValue('departments', [
+        ...form.values.departments,
+        departmentValue,
+      ]);
+    }
+  };
 
   const handleLocalFormSubmit = async () => {
     const response: any = await handleFormSubmit({
@@ -90,6 +174,7 @@ export const DoctorRegistrationFrom = ({
     });
     if (response?.status === 200 && !id) {
       form.reset();
+      setDepartments([]);
     }
     if (
       response.statusCode === 400 &&
@@ -106,8 +191,14 @@ export const DoctorRegistrationFrom = ({
   };
   useEffect(() => {
     id && getFieldData();
+    getHospitalData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    getDepartmentDataForHospital();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.values.hospital]);
 
   return (
     <div>
@@ -128,8 +219,8 @@ export const DoctorRegistrationFrom = ({
             {...form.getInputProps('fullAddress')}
           />
           <TextInput
-            label="Organization"
-            placeholder="Enter your organization"
+            label="College/Organization"
+            placeholder="Enter your college/organization"
             required
             withAsterisk
             {...form.getInputProps('organization')}
@@ -185,6 +276,47 @@ export const DoctorRegistrationFrom = ({
             }
             {...form.getInputProps('documentBack')}
           />
+        </SimpleGrid>
+        <SimpleGrid>
+          <Select
+            label="Select the hospital"
+            placeholder="eg. Kantipur Hospital"
+            required
+            withAsterisk
+            data={hospitals}
+            {...form.getInputProps('hospital')}
+          />
+        </SimpleGrid>
+        <SimpleGrid cols={{ sm: 1, md: 2, lg: 3 }} className="mt-2">
+          {departments.map((item: any) => {
+            return (
+              <div
+                className={`flex justify-between px-2 rounded-lg w-full py-2 hover:cursor-pointer bg-gray-50 ${
+                  form.values.departments.includes(item.value)
+                    ? 'border-2 border-gray-500'
+                    : 'bg-primary'
+                }`}
+                key={item.value}
+                onClick={() => handleDepartment(item.value)}
+              >
+                <div className="flex gap-4 flex-1">
+                  <AspectRatio
+                    ratio={240 / 347}
+                    style={{ flex: `0 0 ${rem(100)}` }}
+                    maw={'34px'}
+                  >
+                    <img src={item.image} alt={item.name} />
+                  </AspectRatio>
+
+                  <Flex direction={'column'} wrap={'nowrap'}>
+                    <Text className="text-textPrimary font-display text-md font-bold">
+                      {item.name}
+                    </Text>
+                  </Flex>
+                </div>
+              </div>
+            );
+          })}
         </SimpleGrid>
         <FormFooter title={submitTitle}></FormFooter>
       </form>

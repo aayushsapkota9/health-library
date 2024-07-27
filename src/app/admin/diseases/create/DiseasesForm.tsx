@@ -4,7 +4,7 @@ import FormFooter from '@/src/components/layouts/formFooter';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { showNotificationOnRes } from '@/src/utils/notificationUtils';
-import { SimpleGrid, Textarea, TextInput } from '@mantine/core';
+import { SimpleGrid, Textarea, TextInput, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect, useRef } from 'react';
 import { Editor as TinyMCEEditor } from 'tinymce';
@@ -47,10 +47,11 @@ export const DoctorRegistrationFrom = ({
     const http = new HttpService();
     const response: any = await http
       .service()
-      .get(apiRoutes.doctors.doctorById(id as string));
+      .get(apiRoutes.diseases.diseaseById(id as string));
+
     const data = response.data;
     const defaultValues = {
-      title: data.title,
+      name: data.name,
       html: data.html,
       references: data.references,
     };
@@ -96,12 +97,12 @@ export const DoctorRegistrationFrom = ({
           />
         </SimpleGrid>
         <TinyMceEditorWithTemplate
+          initialValue={form.values.html}
           editorRef={editorRef}
         ></TinyMceEditorWithTemplate>
         {form.errors.html && (
           <div className="text-red-500">{JSON.stringify(form.errors.html)}</div>
         )}
-        {JSON.stringify(form.errors)}
         <Textarea
           label="References"
           placeholder="eg. https://www.who.int/emergencies/diseases"
@@ -109,6 +110,10 @@ export const DoctorRegistrationFrom = ({
           withAsterisk
           {...form.getInputProps('references')}
         />
+        <Text className="text-red-500">
+          IMP *There is an bug in this form where you need to click submit
+          button twice for it to work
+        </Text>
         <FormFooter title={submitTitle}></FormFooter>
       </form>
     </div>

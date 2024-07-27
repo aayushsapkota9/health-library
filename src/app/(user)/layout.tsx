@@ -49,7 +49,7 @@ export default function DashboardLayout({
             <Image
               height={120}
               width={150}
-              src={'/H_Library_transparent.png'}
+              src={'/H_Library_transparent_white.png'}
               alt="H Library Logo"
             />
           </Link>

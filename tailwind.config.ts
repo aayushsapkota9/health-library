@@ -30,7 +30,7 @@ const config: Config = {
         // textPrimary: '#ffffff',
         // textSecondary: '#FACC15',
         primary: '#ffffff',
-        secondary: '#f1faff',
+        secondary: '#2978A0',
         tertiary: '#f1faff',
         quaternary: '#1e3a8a',
         senary: '#012651',

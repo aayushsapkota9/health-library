@@ -3,11 +3,8 @@ import { useLogout } from '@/src/hooks/auth/useLogout';
 import { showSuccessNotification } from '@/src/utils/notificationUtils';
 import { Button, Container, Flex } from '@mantine/core';
 import {
-  IconBrandWhatsapp,
-  IconList,
   IconLockAccess,
   IconLogout,
-  IconTicket,
   IconUser,
   IconUsersGroup,
 } from '@tabler/icons-react';
@@ -45,6 +42,17 @@ const ProfileHeader = () => {
             leftSection={<IconLockAccess />}
           >
             Security
+          </Button>
+        </Link>
+        <Link href="/profile/appointments">
+          <Button
+            variant={
+              pathName === '/profile/appointments' ? 'outline' : 'transparent'
+            }
+            className="text-textPrimary"
+            leftSection={<IconUsersGroup />}
+          >
+            Appointments
           </Button>
         </Link>
         <Button

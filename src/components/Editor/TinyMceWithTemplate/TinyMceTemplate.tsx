@@ -26,7 +26,7 @@ const TinyMceEditorWithTemplate = (props: ITinyMceTemplateEditorProps) => {
         props.editorRef.current = editor;
       }}
       apiKey="cfjfj03aqrqyu5dx3oakt4c1bocijou54maxe7lpnluo1o37"
-      initialValue={TEMPLATE_HTML}
+      initialValue={props.initialValue ? props.initialValue : TEMPLATE_HTML}
       init={{
         images_upload_handler: async (Blob, progress) => {
           const formData = new FormData();
@@ -43,7 +43,9 @@ const TinyMceEditorWithTemplate = (props: ITinyMceTemplateEditorProps) => {
         editable_class: 'editable',
         content_style: TEMPLATE_CSS,
         elementpath: false,
-        newdocument_content: TEMPLATE_HTML,
+        newdocument_content: props.initialValue
+          ? props.initialValue
+          : TEMPLATE_HTML,
       }}
     />
   );

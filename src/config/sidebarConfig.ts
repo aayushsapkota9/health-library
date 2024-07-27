@@ -27,4 +27,10 @@ export const sidebarConfig = [
     link: '/admin/diseases',
     roles: [ROLE.ADMIN],
   },
+  {
+    label: 'Hospitals',
+    key: 'hospitals',
+    link: '/admin/hospitals',
+    roles: [ROLE.ADMIN],
+  },
 ];

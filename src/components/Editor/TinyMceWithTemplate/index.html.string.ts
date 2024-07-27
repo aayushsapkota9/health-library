@@ -2,7 +2,7 @@ export const TEMPLATE_HTML = `<body>
     <section class="first-section">
         <div>
             <h1 class="first-section-title editable">Name of disease</h1>
-            <div class="editable">
+            <div class="editable" id="first-section-description">
                 Small description
             </div>
         </div>

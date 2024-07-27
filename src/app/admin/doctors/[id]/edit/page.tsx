@@ -6,7 +6,7 @@ import { FormTitles } from '@/src/types/enums/formTitles.enums';
 import { objectToFormData } from '@/src/utils/formdata.append';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 import {
-  ISupplierFromValue,
+  IDoctorFormValues,
   DoctorRegistrationFrom,
 } from '../../create/DoctorRegistrationForm';
 import { useParams } from 'next/navigation';
@@ -17,7 +17,7 @@ export default function Page() {
   const handleCreateFormSubmit = async ({
     values,
   }: {
-    values: ISupplierFromValue;
+    values: IDoctorFormValues;
   }) => {
     const http = new HttpService();
     let formData = objectToFormData(values);

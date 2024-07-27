@@ -13,6 +13,7 @@ export const useLogin = () => {
     try {
       const user = await authService.login(username, password);
       if (user) {
+        Cookies.remove('currentUser');
         Cookies.set('currentUser', JSON.stringify(user));
       }
       return user;

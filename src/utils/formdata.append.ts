@@ -4,13 +4,18 @@ export function objectToFormData(formValues: any): FormData {
     const value = formValues[mainKey];
 
     if (Array.isArray(value)) {
-      value.forEach((obj, index) => {
-        Object.keys(obj).forEach((key) => {
-          if (key !== 'key') {
-            // Assuming 'key' is not meant to be appended
-            formData.append(`${mainKey}[${index}][${key}]`, obj[key]);
-          }
-        });
+      value.forEach((element, index) => {
+        if (typeof element === 'object' && element !== null) {
+          // Handle array of objects
+          Object.keys(element).forEach((key) => {
+            if (key !== 'key') {
+              formData.append(`${mainKey}[${index}][${key}]`, element[key]);
+            }
+          });
+        } else {
+          // Handle array of primitive values (e.g., strings)
+          formData.append(`${mainKey}[${index}]`, element);
+        }
       });
     } else {
       formData.append(mainKey, value);

@@ -20,12 +20,10 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const isLoggedIn = currentUser && Date.now() < currentUser.expiredAt * 1000;
   const isAdmin = currentUser?.roles.includes('admin');
-
   // Public routes are accessible to anyone
   if (publicRoutes.includes(url.pathname)) {
     return NextResponse.next();
   }
-
   // Redirect to login if trying to access protected routes and not logged in or session expired, avoiding redirect loop
   if (
     !isLoggedIn &&

@@ -10,12 +10,12 @@ import {
 const TrustHeader = () => {
   return (
     <Container
-      className="bg-gradient-to-r from-primary to-secondary py-3"
+      className="bg-gradient-to-b from-quaternary to-secondary py-3"
       fluid
       visibleFrom="sm"
       px={{ xs: 20, sm: 50, md: 120 }}
     >
-      <Group>
+      <Group className="text-textTertiary">
         <span className="flex justify-center gap-1 items-center text-sm">
           {' '}
           <IconCheck size={15}></IconCheck>
