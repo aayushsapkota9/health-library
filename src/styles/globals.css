@@ -1,0 +1,73 @@
+@layer tailwind {
+  @tailwind base;
+}
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/Roboto.woff2) format('woff2');
+  }
+}
+
+/* .prose
+  :where(strong):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  color: white;
+  font-weight: 600;
+} */
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+.table-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.create-box-styles {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px 10px;
+  margin-left: 10px;
+}
+
+.prose .first-section {
+  @apply bg-[#f1faff] p-4; /* Use Tailwind utility classes */
+  position: relative;
+  width: 100vw;
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+  padding: 5rem;
+}
+.prose {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+.prose ul li::marker {
+  color: black; /* Change the color of the bullet */
+}
