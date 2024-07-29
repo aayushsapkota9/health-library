@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { EHttpMethod } from '../types/index';
+import { getSession } from 'next-auth/react';
 
 class HttpService {
   private baseURL: string;
@@ -9,26 +10,37 @@ class HttpService {
   }
 
   // Get authorization token for requests
-  private getAuthorization(): Record<string, string> {
-    const accessToken = Cookies.get('currentUser') || '';
+  // private getAuthorization(): Record<string, string> {
+  //   const accessToken = Cookies.get('currentUser') || '';
 
-    if (!accessToken) {
+  //   if (!accessToken) {
+  //     return {};
+  //   }
+  //   const obj = JSON.parse(accessToken);
+  //   return { Authorization: `Bearer ${obj.accessToken}` };
+  // }
+  private async getAuthorization(): Promise<Record<string, string>> {
+    const session = await getSession();
+
+    if (!session || !session.token) {
       return {};
     }
-    const obj = JSON.parse(accessToken);
-    return { Authorization: `Bearer ${obj.accessToken}` };
-  }
 
+    return { Authorization: `Bearer ${session.token}` };
+  }
   // Initialize service configuration
   public service(): HttpService {
     return this;
   }
 
   // Set up request headers
-  private setupHeaders(hasAttachment = false): Record<string, string> {
+  private async setupHeaders(
+    hasAttachment = false
+  ): Promise<Record<string, string>> {
+    const authorization = await this.getAuthorization();
     return hasAttachment
-      ? { ...this.getAuthorization() }
-      : { 'Content-Type': 'application/json', ...this.getAuthorization() };
+      ? { ...authorization }
+      : { 'Content-Type': 'application/json', ...authorization };
   }
 
   // Handle HTTP requests using Fetch API
@@ -61,7 +73,7 @@ class HttpService {
   ): Promise<T> {
     const hasAttachment = false;
     const options: RequestInit = {
-      headers: this.setupHeaders(hasAttachment),
+      headers: await this.setupHeaders(hasAttachment),
       ...customOptions,
     };
 
@@ -76,7 +88,7 @@ class HttpService {
   ): Promise<T> {
     return this.request<T>(EHttpMethod.POST, url, {
       body: JSON.stringify(payload),
-      headers: this.setupHeaders(hasAttachment),
+      headers: await this.setupHeaders(hasAttachment),
     });
   }
 
@@ -84,13 +96,13 @@ class HttpService {
   public async postFormData<T>(url: string, formData: FormData): Promise<T> {
     return this.request<T>(EHttpMethod.POST, url, {
       body: formData,
-      headers: this.setupHeaders(true), // Set isFormData to true
+      headers: await this.setupHeaders(true), // Set isFormData to true
     });
   }
   public async patchFormData<T>(url: string, formData: FormData): Promise<T> {
     return this.request<T>(EHttpMethod.PUT, url, {
       body: formData,
-      headers: this.setupHeaders(true), // Set isFormData to true
+      headers: await this.setupHeaders(true), // Set isFormData to true
     });
   }
   // Perform UPDATE request
@@ -101,7 +113,7 @@ class HttpService {
   ): Promise<T> {
     return this.request<T>(EHttpMethod.PUT, url, {
       body: JSON.stringify(payload),
-      headers: this.setupHeaders(hasAttachment),
+      headers: await this.setupHeaders(hasAttachment),
     });
   }
 
@@ -109,7 +121,7 @@ class HttpService {
   public async remove<T>(url: string): Promise<T> {
     const hasAttachment = false;
     return this.request<T>(EHttpMethod.DELETE, `${url}`, {
-      headers: this.setupHeaders(hasAttachment),
+      headers: await this.setupHeaders(hasAttachment),
     });
   }
 

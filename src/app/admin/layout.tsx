@@ -40,7 +40,7 @@ export default function DashboardLayout({
         />
       </AppShellHeader>
       <AppShellNavbar p="md">
-        <Navbar currentUser={currentUser} />
+        <Navbar />
       </AppShellNavbar>
       <AppShellMain>{children}</AppShellMain>
     </AppShell>

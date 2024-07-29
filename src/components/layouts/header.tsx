@@ -1,9 +1,10 @@
 'use client';
-import { useLogout } from '@/src/hooks/auth/useLogout';
+
 import { User } from '@/src/types/user';
 import { Burger, Group } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
 interface HeaderProps {
   mobileOpened: boolean;
@@ -21,8 +22,8 @@ const Header: React.FC<HeaderProps> = ({
   toggleDesktop,
   currentUser,
 }) => {
-  const { logout } = useLogout();
   const router = useRouter();
+  const { data: session } = useSession();
 
   return (
     <Group h="100%" px="md" className="flex justify-between">
@@ -41,12 +42,11 @@ const Header: React.FC<HeaderProps> = ({
       <div className="flex justify-center items-center gap-5">
         {' '}
         <div className="hidden md:block md:font-semibold lg:block lg:font-semibold">
-          {currentUser && currentUser.email}
+          {session?.user.email}
         </div>
         <button
           onClick={() => {
-            logout();
-            router.push('/auth/login');
+            signOut();
           }}
           className="mt-2 border border-solid border-black py-2 px-4 rounded cursor-pointer"
         >

@@ -5,6 +5,7 @@ import apiRoutes from '@/src/config/api.config';
 import { DEPARTMENTS } from '@/src/constants/Departments';
 import { HttpService } from '@/src/services';
 import { DepartmentValue } from '@/src/types/enums/department.enums';
+import { User } from '@/src/types/user';
 import { showNotificationOnRes } from '@/src/utils/notificationUtils';
 import {
   AspectRatio,
@@ -16,28 +17,23 @@ import {
   TextInput,
   Text,
   NumberInput,
+  Fieldset,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconUpload } from '@tabler/icons-react';
 import { useEffect } from 'react';
-
-interface IDepartment {
-  name: string;
-  value: string;
-  image: string;
+interface IUser {
+  fullName?: string;
+  email: string;
 }
 export interface IHospitalFromValue {
   name: string;
-  phone: string;
   address: string;
-  noOfGeneralBeds: number;
-  noOfICUBeds: number;
-  noOfEmergencyBeds: number;
-  latitude?: string;
-  longitude?: string;
-  image: File | string;
-  backgroundImage: File | string;
+  phone: string;
+  noOfBeds: number;
+  logo: File | string;
   departments: DepartmentValue[];
+  user?: User;
 }
 export interface FormProps {
   values: IHospitalFromValue;
@@ -59,11 +55,8 @@ export const HospitalRegistrationForm = ({
       name: '',
       phone: '',
       address: '',
-      noOfGeneralBeds: 0,
-      noOfICUBeds: 0,
-      noOfEmergencyBeds: 0,
-      image: '',
-      backgroundImage: '',
+      noOfBeds: 0,
+      logo: '',
       departments: [],
     },
     validate: {
@@ -75,6 +68,8 @@ export const HospitalRegistrationForm = ({
         value.length < 2 ? 'Address must have at least 2 letters' : null,
       departments: (value) =>
         value.length < 1 ? 'Please select at least 1 department' : null,
+      logo: (value) =>
+        typeof value === 'string' ? 'Please select logo' : null,
     },
   });
   const getFieldData = async () => {
@@ -87,9 +82,8 @@ export const HospitalRegistrationForm = ({
       name: data.name,
       phone: data.phone,
       address: data.address,
-      noOfGeneralBeds: data.noOfGeneralBeds,
-      noOfICUBeds: data.noOfICUBeds,
-      noOfEmergencyBeds: data.noOfEmergencyBeds,
+      noOfBeds: data.noOfBeds,
+      logo: data.logo,
       departments: data.departments,
     };
     response?.status === 200 && form.setValues(defaultValues);
@@ -117,7 +111,6 @@ export const HospitalRegistrationForm = ({
   };
   const handleDepartment = (departmentValue: DepartmentValue) => {
     const isSelected = form.values.departments.includes(departmentValue);
-
     if (isSelected) {
       // Remove the department
       form.setFieldValue(
@@ -164,25 +157,11 @@ export const HospitalRegistrationForm = ({
             {...form.getInputProps('phone')}
           />
           <NumberInput
-            label="No. of General Beds"
+            label="No. of Beds"
             placeholder="eg. 99"
             required
             withAsterisk
-            {...form.getInputProps('noOfGeneralBeds')}
-          />
-          <NumberInput
-            label="No. of ICU Beds"
-            placeholder="eg. 99"
-            required
-            withAsterisk
-            {...form.getInputProps('noOfICUBeds')}
-          />{' '}
-          <NumberInput
-            label="No. of Emergency Beds"
-            placeholder="eg. 99"
-            required
-            withAsterisk
-            {...form.getInputProps('noOfEmergencyBeds')}
+            {...form.getInputProps('noOfBeds')}
           />
           <FileInput
             label="Hospitals's logo"
@@ -193,18 +172,22 @@ export const HospitalRegistrationForm = ({
                 <IconUpload></IconUpload>
               </>
             }
-            {...form.getInputProps('image')}
+            {...form.getInputProps('logo')}
           />
-          <FileInput
-            label="Background Image"
-            required={!id}
-            withAsterisk={!id}
-            rightSection={
-              <>
-                <IconUpload></IconUpload>
-              </>
-            }
-            {...form.getInputProps('backgroundImage')}
+          <TextInput
+            label="Email"
+            type="email"
+            placeholder="eg. admin@kantipur.com"
+            required
+            withAsterisk
+            {...form.getInputProps('email')}
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Enter a Secure Password"
+            required
+            withAsterisk
+            {...form.getInputProps('password')}
           />
         </SimpleGrid>
         <div className="my-4">
@@ -214,38 +197,39 @@ export const HospitalRegistrationForm = ({
           {form.errors.departments && (
             <ErrorText message={form.errors.departments as string}></ErrorText>
           )}
-          {JSON.stringify(form.errors)}
-          <SimpleGrid cols={{ sm: 1, md: 2, lg: 3 }} className="mt-2">
-            {DEPARTMENTS.map((item: any) => {
-              return (
-                <div
-                  className={`flex justify-between px-2 rounded-lg w-full py-2 hover:cursor-pointer bg-gray-50 ${
-                    form.values.departments.includes(item.value)
-                      ? 'border-2 border-gray-500'
-                      : 'bg-primary'
-                  }`}
-                  key={item.value}
-                  onClick={() => handleDepartment(item.value)}
-                >
-                  <div className="flex gap-4 flex-1">
-                    <AspectRatio
-                      ratio={240 / 347}
-                      style={{ flex: `0 0 ${rem(100)}` }}
-                      maw={'34px'}
-                    >
-                      <img src={item.image} alt={item.name} />
-                    </AspectRatio>
+          <Fieldset>
+            <SimpleGrid cols={{ sm: 1, md: 2, lg: 3 }} className="mt-4">
+              {DEPARTMENTS.map((item: any) => {
+                return (
+                  <div
+                    className={`flex justify-between px-2 rounded-lg w-full py-2 hover:cursor-pointer bg-gray-50 ${
+                      form.values.departments.includes(item.value)
+                        ? 'border-2 border-gray-500'
+                        : 'bg-gray-100'
+                    }`}
+                    key={item.value}
+                    onClick={() => handleDepartment(item.value)}
+                  >
+                    <div className="flex gap-4 flex-1">
+                      <AspectRatio
+                        ratio={240 / 347}
+                        style={{ flex: `0 0 ${rem(100)}` }}
+                        maw={'34px'}
+                      >
+                        <img src={item.image} alt={item.name} />
+                      </AspectRatio>
 
-                    <Flex direction={'column'} wrap={'nowrap'}>
-                      <Text className="text-textPrimary font-display text-md font-bold">
-                        {item.name}
-                      </Text>
-                    </Flex>
+                      <Flex direction={'column'} wrap={'nowrap'}>
+                        <Text className="text-textPrimary font-display text-md font-bold">
+                          {item.name}
+                        </Text>
+                      </Flex>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </SimpleGrid>
+                );
+              })}{' '}
+            </SimpleGrid>
+          </Fieldset>
         </div>
 
         <FormFooter title={submitTitle}></FormFooter>

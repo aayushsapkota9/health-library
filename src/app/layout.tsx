@@ -7,6 +7,7 @@ import { Inter } from 'next/font/google';
 import '../styles/globals.css';
 import { theme } from '../theme';
 import { SITE_CONFIG } from '../config/site.config';
+import NextAuthSessonProvider from '../components/Provider/SessionProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,11 +36,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} bg-primary `}>
-        {' '}
-        <MantineProvider theme={theme}>
-          <Notifications />
-          {children}
-        </MantineProvider>
+        <NextAuthSessonProvider>
+          <MantineProvider theme={theme}>
+            <Notifications />
+            {children}
+          </MantineProvider>
+        </NextAuthSessonProvider>
       </body>
     </html>
   );

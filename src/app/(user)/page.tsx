@@ -1,13 +1,5 @@
-import {
-  Tabs,
-  TabsList,
-  TabsPanel,
-  TabsTab,
-  TextInput,
-  Title,
-} from '@mantine/core';
+import { Tabs, TabsList, TabsPanel, TabsTab, Title } from '@mantine/core';
 import '@mantine/core/styles.css';
-import { IconPhoto, IconMessageCircle } from '@tabler/icons-react';
 import classes from './Demo.module.css';
 import Search from '@/src/components/pages/root/Search';
 import Browse from '@/src/components/pages/root/Browse';

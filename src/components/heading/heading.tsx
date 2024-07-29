@@ -6,8 +6,7 @@ interface HeadingProps {
 }
 
 const Heading: React.FC<HeadingProps> = ({ name }) => {
-  const formattedName =
-    name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  const formattedName = name;
   return (
     <div>
       <Title order={1}>{formattedName}</Title>

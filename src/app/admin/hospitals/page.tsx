@@ -56,9 +56,7 @@ const Supplier = async ({
     { key: 'name', displayName: 'Name' },
     { key: 'address', displayName: 'Address' },
     { key: 'phone', displayName: 'Phone' },
-    { key: 'noOfGeneralBeds', displayName: 'No. of General Beds' },
-    { key: 'noOfICUBeds', displayName: 'No. of ICU Beds' },
-    { key: 'noOfEmergencyBeds', displayName: 'No. of Emergency Beds' },
+    { key: 'noOfBeds', displayName: 'No. of Beds' },
   ];
   const breadCrumps = [
     { title: 'Admin', href: '/admin/dashboard' },
