@@ -6,9 +6,9 @@ import React from 'react';
 
 export const SupplierActionButton = ({ id }: { id: string }) => {
   return (
-    <>
-      <DeletePopover url={apiRoutes.doctors.doctorById(id)}></DeletePopover>
+    <div className="flex ">
+      <DeletePopover url={apiRoutes.staff.byId(id)}></DeletePopover>
       <NavigateToEdit id={id}></NavigateToEdit>
-    </>
+    </div>
   );
 };

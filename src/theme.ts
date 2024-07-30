@@ -4,7 +4,10 @@ import { createTheme } from '@mantine/core';
 
 export const theme = createTheme({
   /* Put your mantine theme override here */
-  fontFamily: 'Roboto',
+  fontFamily: 'Inter',
+  headings: {
+    fontFamily: 'Inter',
+  },
   breakpoints: {
     xs: '375px',
     sm: '600px',

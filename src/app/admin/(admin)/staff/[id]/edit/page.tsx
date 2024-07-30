@@ -5,11 +5,12 @@ import { HttpService } from '@/src/services';
 import { FormTitles } from '@/src/types/enums/formTitles.enums';
 import { objectToFormData } from '@/src/utils/formdata.append';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
-import {
-  IDoctorFormValues,
-  DoctorRegistrationFrom,
-} from '../../create/DoctorRegistrationForm';
+
 import { useParams } from 'next/navigation';
+import {
+  IStaffFormValues,
+  StaffRegistrationForm,
+} from '../../create/StaffRegistrationForm';
 
 export default function Page() {
   const params = useParams();
@@ -17,16 +18,13 @@ export default function Page() {
   const handleCreateFormSubmit = async ({
     values,
   }: {
-    values: IDoctorFormValues;
+    values: IStaffFormValues;
   }) => {
     const http = new HttpService();
     let formData = objectToFormData(values);
     const response: any = await http
       .service()
-      .patchFormData(
-        apiRoutes.doctors.doctorById(params.id as string),
-        formData
-      );
+      .patchFormData(apiRoutes.staff.byId(params.id as string), formData);
     return response;
   };
   const breadCrumps = [
@@ -37,8 +35,8 @@ export default function Page() {
   return (
     <div>
       <CustomBreadCrumps items={breadCrumps}></CustomBreadCrumps>
-      <FormWrapper headerTitle="Edit Doctor">
-        <DoctorRegistrationFrom
+      <FormWrapper headerTitle="Edit Staff">
+        <StaffRegistrationForm
           submitTitle={FormTitles.update}
           handleFormSubmit={handleCreateFormSubmit}
           id={params.id as string}

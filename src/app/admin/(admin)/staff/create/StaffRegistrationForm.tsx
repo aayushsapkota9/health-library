@@ -4,41 +4,36 @@ import apiRoutes from '@/src/config/api.config';
 import { paginationConfig } from '@/src/config/pagination.config';
 import { DEPARTMENTS } from '@/src/constants/Departments';
 import { HttpService } from '@/src/services';
-import { DepartmentValue } from '@/src/types/enums/department.enums';
+import { POSITION } from '@/src/types/enums/position.enums';
 import { showNotificationOnRes } from '@/src/utils/notificationUtils';
 import {
-  AspectRatio,
   FileInput,
-  Flex,
   PasswordInput,
-  rem,
   Select,
   SimpleGrid,
   TextInput,
-  Text,
+  MultiSelect,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconUpload } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
-export interface IDoctorFormValues {
-  fullName: string;
-  fullAddress: string;
-  phoneNo: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  organization: string;
-  documentFront: File | string;
-  documentBack: File | string;
+export interface IStaffFormValues {
+  name: '';
+  position: '';
+  phone: '';
+  email: '';
+  password: '';
+  confirmPassword: '';
+  photo: File | string;
   hospital: string;
   departments: string[];
 }
 export interface FormProps {
-  values: IDoctorFormValues;
+  values: IStaffFormValues;
 }
 
-export const DoctorRegistrationFrom = ({
+export const StaffRegistrationForm = ({
   submitTitle,
   handleFormSubmit,
   id,
@@ -51,27 +46,25 @@ export const DoctorRegistrationFrom = ({
 }) => {
   const [hospitals, setHospitals] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const form = useForm<IDoctorFormValues>({
+  const form = useForm<IStaffFormValues>({
     initialValues: {
-      fullName: '',
-      fullAddress: '',
-      phoneNo: '',
+      name: '',
+      position: '',
+      phone: '',
       email: '',
       password: '',
       confirmPassword: '',
-      organization: '',
-      documentFront: '',
-      documentBack: '',
+      photo: '',
       hospital: '',
       departments: [],
     },
     validate: {
-      fullName: (value) =>
+      name: (value) =>
         value.length < 4 ? 'Name must have at least 4 letters' : null,
+      position: (value) =>
+        value.length < 2 ? 'Please select a position' : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      fullAddress: (value) =>
-        value.length < 2 ? 'Address must have at least 2 letters' : null,
-      phoneNo: (value) =>
+      phone: (value) =>
         value.length < 7 ? 'Phone must have at least 7 letters' : null,
       password: (value) =>
         value.length < 8 && !id
@@ -79,26 +72,22 @@ export const DoctorRegistrationFrom = ({
           : null,
       confirmPassword: (value, values) =>
         value != values.password && !id ? 'Password does not match' : null,
-      organization: (value) =>
-        value.length < 2 && !id
-          ? 'Organization must have at least 2 letters'
-          : null,
+      photo: (value) =>
+        typeof value === 'string' && !id ? 'Please select logo' : null,
     },
   });
   const getFieldData = async () => {
     const http = new HttpService();
     const response: any = await http
       .service()
-      .get(apiRoutes.doctors.doctorById(id as string));
+      .get(apiRoutes.staff.byId(id as string));
     const data = response.data;
     const defaultValues = {
-      fullName: data.user.fullName,
+      name: data.name,
+      position: data.position,
+      phone: data.phone,
       email: data.user.email,
-      fullAddress: data.fullAddress,
-      phoneNo: data.phoneNo,
-      organization: data.organization,
-      documentFront: data.documentFront,
-      documentBack: data.documentBack,
+      departments: data.departments.map((d: any) => d.id),
     };
     response?.status === 200 && form.setValues(defaultValues);
   };
@@ -117,6 +106,7 @@ export const DoctorRegistrationFrom = ({
           },
         }
       );
+    console.log(response);
     const transformedData = response?.data?.result.map((item: any) => {
       return {
         label: item.name,
@@ -124,6 +114,16 @@ export const DoctorRegistrationFrom = ({
       };
     });
     setHospitals(transformedData);
+  };
+
+  const getHospitalInfo = async () => {
+    const http = new HttpService();
+    const response: any = await http.service().get(apiRoutes.auth.profile, {
+      next: {
+        cache: 'no-store',
+      },
+    });
+    form.setFieldValue('hospital', response?.data?.hospitalId);
   };
   const getDepartmentDataForHospital = async () => {
     const http = new HttpService();
@@ -135,37 +135,16 @@ export const DoctorRegistrationFrom = ({
           cache: 'no-store',
         },
       });
-    const filterDepartments = (departmentNames: any) => {
-      return DEPARTMENTS.filter(
-        (department) =>
-          departmentNames?.includes(department?.name?.toLowerCase())
+    const transformedData = response?.data?.departments.map((item: any) => {
+      const filtered = DEPARTMENTS.filter(
+        (department) => department.value === item.value
       );
-    };
-    const availableDepartments = response?.data?.departments.map(
-      (item: any) => item.value
-    );
-
-    const departments = filterDepartments(availableDepartments);
-    if (availableDepartments?.length >= 1) {
-      setDepartments(departments as any);
-    }
-  };
-  const handleDepartment = (departmentValue: DepartmentValue) => {
-    const isSelected = form.values.departments.includes(departmentValue);
-
-    if (isSelected) {
-      // Remove the department
-      form.setFieldValue(
-        'departments',
-        form.values.departments.filter((value) => value !== departmentValue)
-      );
-    } else {
-      // Add the department
-      form.setFieldValue('departments', [
-        ...form.values.departments,
-        departmentValue,
-      ]);
-    }
+      return {
+        label: `${filtered[0].name}`,
+        value: item.id,
+      };
+    });
+    setDepartments(transformedData);
   };
 
   const handleLocalFormSubmit = async () => {
@@ -192,6 +171,7 @@ export const DoctorRegistrationFrom = ({
   useEffect(() => {
     id && getFieldData();
     getHospitalData();
+    getHospitalInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -209,28 +189,22 @@ export const DoctorRegistrationFrom = ({
             placeholder="Enter your name"
             required
             withAsterisk
-            {...form.getInputProps('fullName')}
+            {...form.getInputProps('name')}
           />{' '}
-          <TextInput
-            label="Address"
-            placeholder="Enter your address"
+          <Select
+            label="Position"
+            placeholder="eg. Doctor"
             required
             withAsterisk
-            {...form.getInputProps('fullAddress')}
-          />
-          <TextInput
-            label="College/Organization"
-            placeholder="Enter your college/organization"
-            required
-            withAsterisk
-            {...form.getInputProps('organization')}
+            data={Object.keys(POSITION) as Array<keyof typeof POSITION>}
+            {...form.getInputProps('position')}
           />
           <TextInput
             label="Phone No"
             placeholder="98XXXXXXXX"
             required
             withAsterisk
-            {...form.getInputProps('phoneNo')}
+            {...form.getInputProps('phone')}
           />
           <TextInput
             label="Email"
@@ -255,7 +229,7 @@ export const DoctorRegistrationFrom = ({
             {...form.getInputProps('confirmPassword')}
           />
           <FileInput
-            label="Document Front"
+            label="Photo"
             required={!id}
             withAsterisk={!id}
             rightSection={
@@ -263,61 +237,27 @@ export const DoctorRegistrationFrom = ({
                 <IconUpload></IconUpload>
               </>
             }
-            {...form.getInputProps('documentFront')}
+            {...form.getInputProps('photo')}
           />
-          <FileInput
-            label="Document Back"
-            required={!id}
-            withAsterisk={!id}
-            rightSection={
-              <>
-                <IconUpload></IconUpload>
-              </>
-            }
-            {...form.getInputProps('documentBack')}
-          />
-        </SimpleGrid>
-        <SimpleGrid>
           <Select
             label="Select the hospital"
             placeholder="eg. Kantipur Hospital"
             required
             withAsterisk
             data={hospitals}
+            disabled
             {...form.getInputProps('hospital')}
           />
+          <MultiSelect
+            label="Select the departments"
+            placeholder="eg. Oncology"
+            data={departments}
+            value={form.values.departments}
+            withAsterisk
+            {...form.getInputProps('departments')}
+          ></MultiSelect>
         </SimpleGrid>
-        <SimpleGrid cols={{ sm: 1, md: 2, lg: 3 }} className="mt-2">
-          {departments.map((item: any) => {
-            return (
-              <div
-                className={`flex justify-between px-2 rounded-lg w-full py-2 hover:cursor-pointer bg-gray-50 ${
-                  form.values.departments.includes(item.value)
-                    ? 'border-2 border-gray-500'
-                    : 'bg-primary'
-                }`}
-                key={item.value}
-                onClick={() => handleDepartment(item.value)}
-              >
-                <div className="flex gap-4 flex-1">
-                  <AspectRatio
-                    ratio={240 / 347}
-                    style={{ flex: `0 0 ${rem(100)}` }}
-                    maw={'34px'}
-                  >
-                    <img src={item.image} alt={item.name} />
-                  </AspectRatio>
 
-                  <Flex direction={'column'} wrap={'nowrap'}>
-                    <Text className="text-textPrimary font-display text-md font-bold">
-                      {item.name}
-                    </Text>
-                  </Flex>
-                </div>
-              </div>
-            );
-          })}
-        </SimpleGrid>
         <FormFooter title={submitTitle}></FormFooter>
       </form>
     </div>

@@ -9,6 +9,7 @@ import {
   AppShellNavbar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 
 export default function DashboardLayout({
@@ -18,7 +19,7 @@ export default function DashboardLayout({
 }) {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-  const { user: currentUser } = useCurrentUser();
+  const { data: session } = useSession();
 
   return (
     <AppShell
@@ -36,11 +37,11 @@ export default function DashboardLayout({
           toggleMobile={toggleMobile}
           desktopOpened={desktopOpened}
           toggleDesktop={toggleDesktop}
-          currentUser={currentUser}
+          session={session}
         />
       </AppShellHeader>
       <AppShellNavbar p="md">
-        <Navbar />
+        <Navbar session={session} />
       </AppShellNavbar>
       <AppShellMain>{children}</AppShellMain>
     </AppShell>

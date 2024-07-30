@@ -10,8 +10,15 @@ interface NavigateToCreateProps {
 
 const NavigateToCreate = ({ title, url }: NavigateToCreateProps) => {
   return (
-    <Button component={Link} href={url} color={COLOR.primary}>
-      <IconCirclePlus className="mr-1" /> Add {title}
+    <Button
+      radius={'md'}
+      size="md"
+      variant="outline"
+      color={COLOR.secondary}
+      component={Link}
+      href={url}
+    >
+      Add {title}
     </Button>
   );
 };

@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import { EHttpMethod } from '../types/index';
 import { getSession } from 'next-auth/react';
 
@@ -9,16 +8,6 @@ class HttpService {
     this.baseURL = process.env.NEXT_PUBLIC_BASE_URL || '';
   }
 
-  // Get authorization token for requests
-  // private getAuthorization(): Record<string, string> {
-  //   const accessToken = Cookies.get('currentUser') || '';
-
-  //   if (!accessToken) {
-  //     return {};
-  //   }
-  //   const obj = JSON.parse(accessToken);
-  //   return { Authorization: `Bearer ${obj.accessToken}` };
-  // }
   private async getAuthorization(): Promise<Record<string, string>> {
     const session = await getSession();
 
@@ -27,6 +16,11 @@ class HttpService {
     }
 
     return { Authorization: `Bearer ${session.token}` };
+  }
+  private async getAuthorizationServerSide(
+    token: string
+  ): Promise<Record<string, string>> {
+    return { Authorization: `Bearer ${token}` };
   }
   // Initialize service configuration
   public service(): HttpService {
@@ -38,6 +32,15 @@ class HttpService {
     hasAttachment = false
   ): Promise<Record<string, string>> {
     const authorization = await this.getAuthorization();
+    return hasAttachment
+      ? { ...authorization }
+      : { 'Content-Type': 'application/json', ...authorization };
+  }
+  private async setupHeadersOnServer(
+    hasAttachment = false,
+    token: string
+  ): Promise<Record<string, string>> {
+    const authorization = await this.getAuthorizationServerSide(token);
     return hasAttachment
       ? { ...authorization }
       : { 'Content-Type': 'application/json', ...authorization };
@@ -74,6 +77,20 @@ class HttpService {
     const hasAttachment = false;
     const options: RequestInit = {
       headers: await this.setupHeaders(hasAttachment),
+      ...customOptions,
+    };
+
+    return this.request<T>(EHttpMethod.GET, url, options);
+  }
+  //Perform Server side GET request
+  public async serverGet<T>(
+    url: string,
+    token: string,
+    customOptions: Record<string, any> = {}
+  ): Promise<T> {
+    const hasAttachment = false;
+    const options: RequestInit = {
+      headers: await this.setupHeadersOnServer(hasAttachment, token),
       ...customOptions,
     };
 

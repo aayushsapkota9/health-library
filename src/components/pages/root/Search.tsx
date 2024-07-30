@@ -49,11 +49,11 @@ const Search = () => {
       <div className="mt-6">
         <div className="text-center">
           <Title order={1}>
-            <span className="text-textSecondary">{data.length}</span> Results
+            <span className="text-textSecondary">{data?.length}</span> Results
           </Title>
         </div>
         <div className="mt-2">
-          {data.length >= 1 ? (
+          {data && data?.length >= 1 ? (
             <>
               {data.map((disease: any) => (
                 <div key={disease.id}>

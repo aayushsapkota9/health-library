@@ -6,10 +6,17 @@ import { SupplierActionButton } from './HospitalListActionButtons';
 import IndexHeader from '@/src/components/heading/indexHeader';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 import { Suspense } from 'react';
-import Loading from '../../loading';
+import Loading from '../../../loading';
 import { paginationConfig } from '@/src/config/pagination.config';
 import { IHospitalFromValue } from './create/HospitalRegistrationForm';
-type ColumnKey = keyof IHospitalFromValue | 'index';
+import { getToken, JWT } from 'next-auth/jwt';
+import { headers, cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
+type ExtendedColumns = {
+  index: string;
+  email: string;
+};
+type ColumnKey = keyof IHospitalFromValue | keyof ExtendedColumns;
 
 interface Column {
   key: ColumnKey;
@@ -18,13 +25,23 @@ interface Column {
 interface Element extends IHospitalFromValue {}
 const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
   const http = new HttpService();
-
+  const jwt: any = await getToken({
+    req: {
+      headers: Object.fromEntries(headers() as Headers),
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+    } as unknown as NextRequest,
+  });
   const response: any = await http
     .service()
-    .get(
+    .serverGet(
       apiRoutes.hospital.get(
         `page=${page}&limit=${paginationConfig.limit}&sortBy=${paginationConfig.sortBy}&sortOrder=${paginationConfig.sortOrder}`
       ),
+      `${jwt.token}`,
       {
         next: {
           cache: 'no-store',
@@ -35,6 +52,7 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
     (item: Element) => {
       return {
         ...item,
+        email: item.user?.email,
       };
     }
   );
@@ -54,8 +72,10 @@ const Supplier = async ({
   const columns: Column[] = [
     { key: 'index', displayName: 'Index' },
     { key: 'name', displayName: 'Name' },
-    { key: 'address', displayName: 'Address' },
+    { key: 'email', displayName: 'Email' },
     { key: 'phone', displayName: 'Phone' },
+    { key: 'address', displayName: 'Address' },
+
     { key: 'noOfBeds', displayName: 'No. of Beds' },
   ];
   const breadCrumps = [

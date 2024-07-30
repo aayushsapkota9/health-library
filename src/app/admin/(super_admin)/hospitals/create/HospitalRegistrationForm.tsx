@@ -69,22 +69,23 @@ export const HospitalRegistrationForm = ({
       departments: (value) =>
         value.length < 1 ? 'Please select at least 1 department' : null,
       logo: (value) =>
-        typeof value === 'string' ? 'Please select logo' : null,
+        typeof value === 'string' && !id ? 'Please select logo' : null,
     },
   });
   const getFieldData = async () => {
     const http = new HttpService();
     const response: any = await http
       .service()
-      .get(apiRoutes.doctors.doctorById(id as string));
+      .get(apiRoutes.hospital.getById(id as string));
     const data = response.data;
+    console.log(data.departments);
     const defaultValues = {
       name: data.name,
       phone: data.phone,
       address: data.address,
       noOfBeds: data.noOfBeds,
       logo: data.logo,
-      departments: data.departments,
+      departments: data.departments.map((item: any) => item.value),
     };
     response?.status === 200 && form.setValues(defaultValues);
   };

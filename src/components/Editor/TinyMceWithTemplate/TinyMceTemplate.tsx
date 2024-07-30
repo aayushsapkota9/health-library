@@ -16,7 +16,7 @@ const TinyMceEditorWithTemplate = (props: ITinyMceTemplateEditorProps) => {
 
     const response: any = await http
       .service()
-      .postFormData(apiRoutes.doctors.doctors, values);
+      .postFormData(apiRoutes.staff.base, values);
     return response.data.data;
   };
   // console.log(props.editorRef);

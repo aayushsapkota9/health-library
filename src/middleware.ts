@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { adminRoutes, loggedInRoutes } from '../src/router/routes';
+import { routeConfig } from '../src/router/routes';
 import { Role } from './types/enums/Role.enums';
 
 export async function middleware(request: NextRequest) {
@@ -10,43 +10,31 @@ export async function middleware(request: NextRequest) {
   });
 
   const url = request.nextUrl.clone();
-  const isLoggedIn = session && session.exp && Date.now() < session.exp * 1000;
+  const isLoggedIn =
+    !!session && session.exp && Date.now() < session.exp * 1000;
   const userRole = session?.user.role;
 
-  // Redirect to login if trying to access protected or admin routes and not logged in
-  if (
-    !isLoggedIn &&
-    (adminRoutes.includes(url.pathname) ||
-      loggedInRoutes.includes(url.pathname)) &&
-    url.pathname !== '/auth/login'
-  ) {
-    const url = new URL(request.url);
-    const response = NextResponse.redirect(new URL('/api/auth/signin', url));
-    return response;
+  // Redirect to login if trying to access protected routes and not logged in
+  if (!isLoggedIn && routeConfig.some((route) => route.link === url.pathname)) {
+    return NextResponse.redirect(new URL('/api/auth/signin', request.url));
   }
 
-  // Admin routes
-  if (adminRoutes.includes(url.pathname) && isLoggedIn) {
-    if (userRole === Role.SUPER_ADMIN) {
-      return NextResponse.next();
-    } else {
-      const redirectUrl = new URL('/unauthorized', request.url);
-      return NextResponse.redirect(redirectUrl);
-    }
-  }
+  if (isLoggedIn) {
+    const route = routeConfig.find((route) => route.link === url.pathname);
 
-  // Logged-in routes
-  if (loggedInRoutes.includes(url.pathname) && isLoggedIn) {
-    if (userRole === Role.SUPER_ADMIN) {
-      const redirectUrl = new URL('/unauthorized', request.url);
-      return NextResponse.redirect(redirectUrl);
-    } else {
-      return NextResponse.next();
+    if (route) {
+      if (route.roles.includes(userRole as Role)) {
+        return NextResponse.next();
+      } else {
+        return NextResponse.redirect(
+          new URL('/admin/unauthorized', request.url)
+        );
+      }
     }
   }
 
   // If trying to access an auth route while already logged in
-  if (url.pathname === '/auth/login' && isLoggedIn) {
+  if (url.pathname === '/api/auth/signin' && isLoggedIn) {
     const redirectUrl =
       userRole === Role.SUPER_ADMIN
         ? new URL('/admin/dashboard', request.url)

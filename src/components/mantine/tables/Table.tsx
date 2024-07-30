@@ -21,15 +21,29 @@ interface Column {
 interface CustomTableProps {
   columns: Column[];
   elements: Element[];
-  actions?: any; // Updated the type here
+  actions?: any;
+  customColumns?: any[];
 }
 
-const CustomTable = ({ columns, elements, actions }: CustomTableProps) => {
+const CustomTable = ({
+  columns,
+  elements,
+  actions,
+  customColumns,
+}: CustomTableProps) => {
   const rows = elements.map((element) => (
     <TableTr key={element.id}>
       {columns.map((column) => (
         <TableTd key={column.key}>{element[column.key]}</TableTd>
       ))}
+      {customColumns &&
+        customColumns.map((item) => {
+          return (
+            <TableTd key="actions" className="flex gap-2">
+              {React.createElement(item, { id: element.id })}
+            </TableTd>
+          );
+        })}{' '}
       {actions && (
         <TableTd key="actions" className="flex gap-2">
           {React.createElement(actions, { id: element.id })}

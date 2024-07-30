@@ -1,12 +1,49 @@
 import { SITE_CONFIG } from '@/src/config/site.config';
+import { Button } from '@mantine/core';
 import { IconLocation, IconMail, IconPhone } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="bg-tertiary text-textFooter text-sm  ">
-      <div className="mx-auto  w-full max-w-screen-xl  py-3 pb-2 px-3 xs:px-[1rem] sm:px-[2rem] md:px-[5rem] lg:px-[10rem]">
+    <footer>
+      {' '}
+      <div
+        className="relative bg-secondary text-white py-32 "
+        style={{ clipPath: 'ellipse(100% 80% at 50% 0%)' }}
+      >
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            All health services at your finger tips
+          </h2>
+          <p className="mb-8 text-lg">Schedule a demo with our team today!</p>
+          <div className="flex justify-center space-x-4">
+            <Link href={'/profile'}>
+              <Button
+                className="bg-secondary text-white"
+                radius={'md'}
+                size="md"
+                px={20}
+                variant="outline"
+                color="primary.0"
+              >
+                Login
+              </Button>
+            </Link>
+            <Link href={'/profile'}>
+              <Button
+                className="bg-primary text-textPrimary"
+                radius={'md'}
+                size="md"
+                px={20}
+              >
+                Profile
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>{' '}
+      <div className="mx-auto  w-full max-w-screen-xl  pbf-3 pb-2 px-3 xs:px-[1rem] sm:px-[2rem] md:px-[5rem] lg:px-[10rem] bg-primary text-textPrimary ">
         <div className="md:grid grid-cols-2  ">
           <div className="mb-6 relative md:bottom-4  flex gap-2 flex-col">
             <Link href={'/'}>

@@ -23,23 +23,17 @@ const config: Config = {
         },
       },
       colors: {
-        // primary: '#012651',
-        // secondary: '#1e3a8a',
-        // darkPrimary: '#011d3e',
-        // lightBlue: '#1c4dd4',
-        // textPrimary: '#ffffff',
-        // textSecondary: '#FACC15',
         primary: '#ffffff',
-        secondary: '#2978A0',
-        tertiary: '#f1faff',
-        quaternary: '#1e3a8a',
-        senary: '#012651',
-        textPrimary: '#555',
-        textSecondary: '#007bc2',
-        textTertiary: '#edf2f7',
-        textFooter: '#555',
-        textSP: '#ffbe0b',
-        textMRP: '#ffbe0b',
+        secondary: '#5541ef', //dark blue
+        tertiary: '#95979e', //gray
+        quaternary: '#be64c8', //purple pink
+        senary: '#c8a6c9', //light pink
+        lightGreen: '#4db9ab', //light green
+        lightPurple: '#f1f3fb', //light purple
+        lightBlue: '#473aa3', //light blue
+        textPrimary: '#0e1416', //black
+        textSecondary: '#999ea3', //gray
+        textTertiary: '#7c73ce', //purple
         iconPrimary: '#000000',
         iconSecondary: '#60A5FA',
         textHeader: '#FACC15',

@@ -8,7 +8,14 @@ const FormFooter = ({ title }: FormFooterProps) => {
   return (
     <div>
       {' '}
-      <Button type="submit" color={COLOR.primary} mt={10}>
+      <Button
+        type="submit"
+        color={COLOR.secondary}
+        mt={10}
+        radius={'md'}
+        size="md"
+        variant="outline"
+      >
         {' '}
         {title ? title : 'Submit'}
       </Button>

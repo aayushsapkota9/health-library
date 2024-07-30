@@ -8,6 +8,7 @@ import '../styles/globals.css';
 import { theme } from '../theme';
 import { SITE_CONFIG } from '../config/site.config';
 import NextAuthSessonProvider from '../components/Provider/SessionProvider';
+import '@fontsource/inter'; // Defaults to weight 400
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,8 +27,10 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/H_Library.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
           rel="stylesheet"
         />
         <meta

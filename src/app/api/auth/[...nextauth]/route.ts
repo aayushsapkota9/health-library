@@ -1,13 +1,14 @@
 import apiRoutes from '@/src/config/api.config';
-import { HttpService } from '@/src/services';
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-const http = new HttpService();
+import axios from 'axios';
+import { JWT } from 'next-auth/jwt';
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: 'Credentials',
+
       // `credentials` is used to generate a form on the sign in page.
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
@@ -17,11 +18,16 @@ const handler = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const response: any = await http.service().post(apiRoutes.auth.login, {
+        const payload = {
           email: credentials?.username,
           password: credentials?.password,
-        });
+        };
+
+        const { data: response }: any = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}${apiRoutes.auth.login}`,
+          payload
+        );
+        console.log(response);
         if (response.status === 200) {
           // Any object returned will be saved in `user` property of the JWT
           return response.data;
@@ -34,9 +40,28 @@ const handler = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 900, //after leaving the tab
+  },
+
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      if (user) {
+        token = { ...token, ...user };
+      }
+
+      // Extract the expiration time from the JWT and store it in the token
+      if (token?.token) {
+        //@ts-ignore
+        const decodedToken = JSON.parse(
+          //@ts-ignore
+          Buffer.from(token.token.split('.')[1], 'base64').toString()
+        );
+        token.expiresIn = decodedToken.exp;
+      }
+
+      return token;
     },
     async session({ session, token, user }) {
       return { ...session, ...token, ...user };

@@ -33,7 +33,10 @@ const NavigateToCreate = () => {
       onClick={() => {
         router.push(`${updatedPathname}${page ? `?page=${page}` : ''}`);
       }}
-      color={COLOR.primary}
+      color={COLOR.secondary}
+      radius={'md'}
+      size="md"
+      variant="outline"
     >
       <IconList className="mr-1" /> Go Back
     </Button>

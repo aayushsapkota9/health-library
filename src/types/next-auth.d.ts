@@ -1,4 +1,5 @@
 import NextAuth, { User as NextAuthUser, DefaultSession } from 'next-auth';
+import { Role } from './enums/Role.enums';
 
 declare module 'next-auth' {
   interface Session {
@@ -6,7 +7,7 @@ declare module 'next-auth' {
       id: string;
       email: string;
       name: string;
-      role: string;
+      role: Role;
     };
     token: string;
   }
@@ -14,7 +15,7 @@ declare module 'next-auth' {
     id: string;
     email: string;
     name: string;
-    role: string;
+    role: Role;
   }
 }
 
@@ -24,8 +25,9 @@ declare module 'next-auth/jwt' {
       id: string;
       email: string;
       name: string;
-      role: string;
+      role: Role;
     };
+    expiresIn: number;
     exp: number;
     jti: string;
     iat: number;

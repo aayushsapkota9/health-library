@@ -4,13 +4,6 @@ const apiRoutes = {
     profile: '/auth/user/me',
     changePassword: '/auth/change-password',
   },
-  doctors: {
-    doctors: '/doctors',
-    doctorById: (id: string | number) => `/doctors/${id}`,
-    getAllDoctors: (params?: string) => `/doctors?${params}`,
-    getDoctorByDepartment: (hospitalId: string, departmentId: string) =>
-      `/doctors/hospital/${hospitalId}/${departmentId}`,
-  },
   diseases: {
     diseases: '/diseases',
     diseaseById: (id: string | number) => `/diseases/${id}`,
@@ -27,6 +20,11 @@ const apiRoutes = {
   appointment: {
     base: '/appointment',
     get: (params?: string) => `/appointment?${params}`,
+  },
+  staff: {
+    base: '/staff',
+    get: (params?: string) => `/staff?${params}`,
+    byId: (id: string | number) => `/staff/${id}`,
   },
 };
 

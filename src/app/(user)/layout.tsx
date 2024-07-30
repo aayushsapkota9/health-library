@@ -1,6 +1,5 @@
 'use client';
 import Footer from '@/src/components/layouts/User/Footer';
-import TrustHeader from '@/src/components/layouts/User/TrustHeader';
 import {
   AppShell,
   AppShellMain,
@@ -33,8 +32,7 @@ export default function DashboardLayout({
     >
       <header className="  box-border	mb-2">
         {' '}
-        <TrustHeader></TrustHeader>
-        <div className=" flex justify-around items-center lg:justify-between lg:px-10 gap-2 h-20 bg-secondary box-border	">
+        <div className=" flex justify-around items-center lg:justify-between lg:px-10 gap-2 h-20  box-border	">
           <Burger
             color="primary.0"
             opened={opened}
@@ -49,16 +47,26 @@ export default function DashboardLayout({
             <Image
               height={120}
               width={150}
-              src={'/H_Library_transparent_white.png'}
+              src={'/H_Library_transparent.png'}
               alt="H Library Logo"
             />
           </Link>
           <div className="flex gap-2 relative right-2">
             <Link href={'/profile'}>
-              <Button className="bg-quaternary" size="md" px={10}>
-                {' '}
-                <IconUser></IconUser>
-                <VisuallyHidden>Profile</VisuallyHidden>
+              <Button
+                className="bg-primary text-textPrimary"
+                radius={'md'}
+                size="md"
+                px={20}
+                variant="outline"
+                color="primary.0"
+              >
+                Login
+              </Button>
+            </Link>
+            <Link href={'/profile'}>
+              <Button className="bg-secondary" radius={'md'} size="md" px={20}>
+                Profile
               </Button>
             </Link>
           </div>
@@ -93,7 +101,6 @@ export default function DashboardLayout({
       </AppShell.Navbar>
       <AppShellMain>{children}</AppShellMain>
       <div className="xs:mt-4  md:mt-[4rem]">
-        <Divider></Divider>
         <Footer></Footer>
       </div>
     </AppShell>

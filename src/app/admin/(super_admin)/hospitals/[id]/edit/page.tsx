@@ -23,10 +23,7 @@ export default function Page() {
     let formData = objectToFormData(values);
     const response: any = await http
       .service()
-      .patchFormData(
-        apiRoutes.doctors.doctorById(params.id as string),
-        formData
-      );
+      .patchFormData(apiRoutes.hospital.getById(params.id as string), formData);
     return response;
   };
   const breadCrumps = [
