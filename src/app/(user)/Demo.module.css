@@ -23,11 +23,11 @@
 
 .tab[data-active] {
   z-index: 1;
-  background-color: #3182ce; /* Adjust the color as needed */
-  border-color: #3182ce; /* Adjust the color as needed */
+  background-color: #5541ef; /* Adjust the color as needed */
+  border-color: #5541ef; /* Adjust the color as needed */
   color: #ffffff; /* Adjust the color as needed */
 }
 
 .tab[data-active]:hover {
-  background-color: #4299e1; /* Adjust the color as needed */
+  background-color: #6a59eb; /* Adjust the color as needed */
 }

@@ -29,7 +29,8 @@ export default function DashboardLayout({
         breakpoint: 'sm',
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
-      padding="md"
+      padding="lg"
+      layout="alt"
     >
       <AppShellHeader>
         <Header

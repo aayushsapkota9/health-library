@@ -10,13 +10,15 @@ interface BreadcrumbsProps {
 
 export function CustomBreadCrumps({ items }: BreadcrumbsProps) {
   const crumps = items.map((item, index) => (
-    <Link href={item.href} key={index} className="text-blue-700">
+    <Link href={item.href} key={index} className="text-secondary">
       {item.title}
     </Link>
   ));
   return (
     <>
-      <Breadcrumbs separator="->">{crumps}</Breadcrumbs>
+      <div>
+        <Breadcrumbs separator="->">{crumps}</Breadcrumbs>
+      </div>{' '}
     </>
   );
 }

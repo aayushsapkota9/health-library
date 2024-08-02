@@ -46,6 +46,14 @@ const StaffRoutes = [
     link: '/admin/patients',
     roles: [Role.STAFF],
   },
+  {
+    link: '/admin/patients/create',
+    roles: [Role.STAFF],
+  },
+  {
+    link: '/admin/patients/[id]/edit',
+    roles: [Role.STAFF],
+  },
 ];
 const PatientRoutes = [
   {

@@ -27,7 +27,6 @@ const handler = NextAuth({
           `${process.env.NEXT_PUBLIC_BASE_URL}${apiRoutes.auth.login}`,
           payload
         );
-        console.log(response);
         if (response.status === 200) {
           // Any object returned will be saved in `user` property of the JWT
           return response.data;

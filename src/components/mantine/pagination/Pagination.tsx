@@ -20,7 +20,8 @@ const CustomPagination = ({ totalPages }: { totalPages: number }) => {
   );
   return (
     <Pagination
-      color={COLOR.primary}
+      color={COLOR.secondary}
+      className="mt-4"
       onChange={(e) => {
         router.push(pathname + '?' + createQueryString('page', e.toString()));
       }}

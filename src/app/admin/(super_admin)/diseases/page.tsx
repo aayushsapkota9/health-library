@@ -10,6 +10,7 @@ import Loading from '../../../loading';
 import { IDiseasesFormValue } from './create/DiseasesForm';
 import { paginationConfig } from '@/src/config/pagination.config';
 import { formatTimestampToDate } from '@/src/helpers/DateHelper';
+import IndexWrapper from '@/src/components/wrappers/IndexWrapper';
 type ExtraFields = {
   index: number;
   createdAt: string;
@@ -30,7 +31,9 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
     .service()
     .get(
       apiRoutes.diseases.getAllDiseases(
-        `page=${page}&limit=${paginationConfig.limit}&sortBy=${paginationConfig.sortBy}&sortOrder=${paginationConfig.sortOrder}`
+        `page=${page ? page : 1}&limit=${paginationConfig.limit}&sortBy=${
+          paginationConfig.sortBy
+        }&sortOrder=${paginationConfig.sortOrder}`
       ),
       {
         next: {
@@ -76,14 +79,15 @@ const Supplier = async ({
         title={'Diseases'}
         href={'/admin/diseases/create'}
       ></IndexHeader>
-      <Suspense fallback={<Loading></Loading>}>
-        <CustomTable
-          columns={columns}
-          elements={tableData}
-          actions={SupplierActionButton}
-        />
-      </Suspense>
-
+      <IndexWrapper>
+        <Suspense fallback={<Loading></Loading>}>
+          <CustomTable
+            columns={columns}
+            elements={tableData}
+            actions={SupplierActionButton}
+          />
+        </Suspense>
+      </IndexWrapper>
       <CustomPagination totalPages={total} />
     </div>
   );

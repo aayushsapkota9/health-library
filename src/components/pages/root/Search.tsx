@@ -49,7 +49,7 @@ const Search = () => {
       <div className="mt-6">
         <div className="text-center">
           <Title order={1}>
-            <span className="text-textSecondary">{data?.length}</span> Results
+            <span className="text-secondary">{data?.length}</span> Results
           </Title>
         </div>
         <div className="mt-2">

@@ -2,12 +2,12 @@ import { CustomPagination, CustomTable } from '@/src/components/mantine';
 import apiRoutes from '@/src/config/api.config';
 import { HttpService } from '@/src/services';
 import { addIndicesToElements } from '@/src/utils/addIndicesToElements';
-import { SupplierActionButton } from './StaffListActionButtons';
+import { PatientActionButtons } from './PatientListActionButtons';
 import IndexHeader from '@/src/components/heading/indexHeader';
 import { CustomBreadCrumps } from '@/src/components/mantine/BreadCrumps/CustomBreadCrumps';
 import { Suspense } from 'react';
 import { paginationConfig } from '@/src/config/pagination.config';
-import { IStaffFormValues } from './create/StaffRegistrationForm';
+import { IPatientFormValues } from './create/PatientRegistrationForm';
 import { getToken } from 'next-auth/jwt';
 import { headers, cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
@@ -30,7 +30,7 @@ interface Department {
   name: string;
   value: string;
 }
-interface Element extends Omit<IStaffFormValues, 'departments'> {
+interface Element extends Omit<IPatientFormValues, 'departments'> {
   id: string;
   user: {
     id: string;
@@ -54,7 +54,7 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
   const response: any = await http
     .service()
     .serverGet(
-      apiRoutes.staff.get(
+      apiRoutes.patients.get(
         `page=${page ? page : 1}&limit=${paginationConfig.limit}&sortBy=${
           paginationConfig.sortBy
         }&sortOrder=${paginationConfig.sortOrder}`
@@ -87,67 +87,61 @@ const Supplier = async ({
 
   const breadCrumps = [
     { title: 'Admin', href: '/admin/dashboard' },
-    { title: 'Staff', href: '/admin/staff' },
+    { title: 'Patients', href: '/admin/patients' },
   ];
 
   return (
-    <div>
+    <>
       <CustomBreadCrumps items={breadCrumps}></CustomBreadCrumps>
-      <IndexHeader title={'Staff'} href={'/admin/staff/create'}></IndexHeader>
+      <IndexHeader
+        title={'Patient'}
+        href={'/admin/patients/create'}
+      ></IndexHeader>
       <IndexWrapper>
-        <Suspense fallback={<Loading></Loading>}>
-          <Table>
-            <TableThead>
-              <TableTr>
-                <TableTh>Index</TableTh>
-                <TableTh>Name</TableTh>
-                <TableTh>Phone</TableTh>
-                <TableTh>Email</TableTh>
-                <TableTh>Position</TableTh>
-                <TableTh>Photo</TableTh>
-                <TableTh>Department</TableTh>
-                <TableTh>Actions</TableTh>
-              </TableTr>
-            </TableThead>
-            <TableTbody>
-              {tableData.map((item) => {
-                return (
-                  <TableTr key={item.index}>
-                    <TableTd>{item.index}</TableTd>
-                    <TableTd>{item.name}</TableTd>
-                    <TableTd>{item.phone}</TableTd>
-                    <TableTd>{item.user.email}</TableTd>
-                    <TableTd>{item.position}</TableTd>
-                    <TableTd>
-                      <Avatar
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL}/${item.photo}`}
-                      ></Avatar>
-                    </TableTd>
-                    <TableTd>
-                      {item.departments?.map((item, index) => {
-                        return (
-                          <Badge
-                            className="mr-1"
-                            color={getColorByIndex(index)}
-                            key={index}
-                          >
-                            {item.value}
-                          </Badge>
-                        );
-                      })}
-                    </TableTd>
-                    <TableTd>
-                      <SupplierActionButton id={item.id}></SupplierActionButton>
+        <div>
+          <Suspense fallback={<Loading></Loading>}>
+            <Table>
+              <TableThead>
+                <TableTr>
+                  <TableTh>Index</TableTh>
+                  <TableTh>Name</TableTh>
+                  <TableTh>Phone</TableTh>
+                  <TableTh>Email</TableTh>
+                  <TableTh>Actions</TableTh>
+                </TableTr>
+              </TableThead>
+              <TableTbody>
+                {tableData.length >= 1 ? (
+                  tableData.map((item) => {
+                    return (
+                      <TableTr key={item.index}>
+                        <TableTd>{item.index}</TableTd>
+                        <TableTd>{item.name}</TableTd>
+                        <TableTd>{item.phone}</TableTd>
+                        <TableTd>{item.user.email}</TableTd>
+                        <TableTd>
+                          <PatientActionButtons
+                            id={item.id}
+                          ></PatientActionButtons>
+                        </TableTd>
+                      </TableTr>
+                    );
+                  })
+                ) : (
+                  <TableTr>
+                    <TableTd colSpan={5}>
+                      {' '}
+                      There is no data in this table
                     </TableTd>
                   </TableTr>
-                );
-              })}
-            </TableTbody>
-          </Table>
-        </Suspense>
+                )}
+              </TableTbody>
+            </Table>
+          </Suspense>
+        </div>
       </IndexWrapper>
       <CustomPagination totalPages={total} />
-    </div>
+    </>
   );
 };
 

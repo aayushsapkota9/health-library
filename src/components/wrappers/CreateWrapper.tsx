@@ -8,7 +8,9 @@ interface FormWrapperProps {
 const FormWrapper: React.FC<FormWrapperProps> = ({ headerTitle, children }) => {
   return (
     <>
-      <FormHeader title={headerTitle} />
+      <div>
+        <FormHeader title={headerTitle} />
+      </div>{' '}
       <div className="create-box-styles">{children}</div>
     </>
   );

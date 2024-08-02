@@ -26,6 +26,23 @@ const apiRoutes = {
     get: (params?: string) => `/staff?${params}`,
     byId: (id: string | number) => `/staff/${id}`,
   },
+  patients: {
+    base: '/patients',
+    get: (params?: string) => `/patients?${params}`,
+    byId: (id: string | number) => `/patients/${id}`,
+  },
+  records: {
+    base: '/records',
+    get: (params?: string) => `/records?${params}`,
+    byId: (id: string | number) => `/records/${id}`,
+  },
+  tasks: {
+    base: '/tasks',
+    get: (params?: string) => `/tasks?${params}`,
+    byId: (id: string | number) => `/tasks/${id}`,
+    getByStatus: (status: string, params?: string) =>
+      `/tasks/find/${status}?${params}`,
+  },
 };
 
 export default apiRoutes;

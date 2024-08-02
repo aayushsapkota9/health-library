@@ -12,6 +12,7 @@ import { IHospitalFromValue } from './create/HospitalRegistrationForm';
 import { getToken, JWT } from 'next-auth/jwt';
 import { headers, cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
+import IndexWrapper from '@/src/components/wrappers/IndexWrapper';
 type ExtendedColumns = {
   index: string;
   email: string;
@@ -39,7 +40,9 @@ const getTableData = async ({ page = 1 }: { page: string | null | number }) => {
     .service()
     .serverGet(
       apiRoutes.hospital.get(
-        `page=${page}&limit=${paginationConfig.limit}&sortBy=${paginationConfig.sortBy}&sortOrder=${paginationConfig.sortOrder}`
+        `page=${page ? page : 1}&limit=${paginationConfig.limit}&sortBy=${
+          paginationConfig.sortBy
+        }&sortOrder=${paginationConfig.sortOrder}`
       ),
       `${jwt.token}`,
       {
@@ -90,14 +93,15 @@ const Supplier = async ({
         title={'Hospital'}
         href={'/admin/hospitals/create'}
       ></IndexHeader>
-      <Suspense fallback={<Loading></Loading>}>
-        <CustomTable
-          columns={columns}
-          elements={tableData}
-          actions={SupplierActionButton}
-        />
-      </Suspense>
-
+      <IndexWrapper>
+        <Suspense fallback={<Loading></Loading>}>
+          <CustomTable
+            columns={columns}
+            elements={tableData}
+            actions={SupplierActionButton}
+          />
+        </Suspense>{' '}
+      </IndexWrapper>
       <CustomPagination totalPages={total} />
     </div>
   );
