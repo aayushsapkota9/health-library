@@ -6,7 +6,7 @@ First make a .env file in root directory and put in the following
 ```bash
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 NEXT_PUBLIC_IMAGE_URL=http://localhost:3000/upload/
-NEXT_PUBLIC_TINY_MCE_API_KEY=cfjfj03aqrqyu5dx3oakt4c1bocijou54maxe7lpnluo1o37
+NEXT_PUBLIC_TINY_MCE_API_KEY=tinymceapi
 ```
 Then, use npm to install packages
 
