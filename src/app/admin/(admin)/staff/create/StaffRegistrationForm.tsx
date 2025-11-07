@@ -32,7 +32,6 @@ export interface IStaffFormValues {
 export interface FormProps {
   values: IStaffFormValues;
 }
-
 export const StaffRegistrationForm = ({
   submitTitle,
   handleFormSubmit,

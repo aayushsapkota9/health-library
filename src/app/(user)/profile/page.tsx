@@ -21,24 +21,13 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const form = useForm({
     initialValues: {
-      fullName: '',
-      fullAddress: '',
-      phoneNo: '',
+      name: '',
       email: '',
-      organization: '',
-      documentFront: '',
-      documentBack: '',
     },
     validate: {
-      fullName: (value) =>
+      name: (value) =>
         value.length < 4 ? 'Name must have at least 4 letters' : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      fullAddress: (value) =>
-        value.length < 2 ? 'Address must have at least 2 letters' : null,
-      phoneNo: (value) =>
-        value.length < 7 ? 'Phone must have at least 7 digits' : null,
-      organization: (value) =>
-        value.length < 2 ? 'Organization must have at least 2 letters' : null,
     },
   });
 
@@ -67,11 +56,8 @@ const Page = () => {
         },
       });
 
-    form.setFieldValue('fullName', response.data.user.fullName);
-    form.setFieldValue('fullAddress', response.data.fullAddress);
-    form.setFieldValue('organization', response.data.organization);
-    form.setFieldValue('email', response.data.user.email);
-    form.setFieldValue('phoneNo', response.data.phoneNo);
+    form.setFieldValue('name', response.data.name);
+    form.setFieldValue('email', response.data.email);
     setLoading(false);
   };
 
@@ -104,29 +90,9 @@ const Page = () => {
               placeholder="Enter your name"
               required
               withAsterisk
-              {...form.getInputProps('fullName')}
+              {...form.getInputProps('name')}
             />
-            <TextInput
-              label="Address"
-              placeholder="Enter your address"
-              required
-              withAsterisk
-              {...form.getInputProps('fullAddress')}
-            />
-            <TextInput
-              label="Organization"
-              placeholder="Enter your organization"
-              required
-              withAsterisk
-              {...form.getInputProps('organization')}
-            />
-            <TextInput
-              label="Phone No"
-              placeholder="98XXXXXXXX"
-              required
-              withAsterisk
-              {...form.getInputProps('phoneNo')}
-            />
+
             <TextInput
               label="Email"
               placeholder="johndoe@example.com"

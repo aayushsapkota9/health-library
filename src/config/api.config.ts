@@ -25,6 +25,8 @@ const apiRoutes = {
     base: '/staff',
     get: (params?: string) => `/staff?${params}`,
     byId: (id: string | number) => `/staff/${id}`,
+    getStaffByDepartment: (hospitalId: string, departmentId: string) =>
+      `/staff/hospital/${hospitalId}/${departmentId}`,
   },
   patients: {
     base: '/patients',

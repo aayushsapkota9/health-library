@@ -2,69 +2,83 @@ import apiRoutes from '@/src/config/api.config';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
-import { JWT } from 'next-auth/jwt';
-const handler = NextAuth({
+import { Role } from '@/src/types/enums/Role.enums';
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
+      id: 'credentials',
       name: 'Credentials',
-
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
-        password: { label: 'Password', type: 'password' },
+        email: {
+          label: 'Email',
+          type: 'email',
+          placeholder: 'admin@admin.com',
+        },
+        password: {
+          label: 'Password',
+          type: 'password',
+          placeholder: 'Enter your password',
+        },
       },
-      async authorize(credentials, req) {
-        const payload = {
-          email: credentials?.username,
-          password: credentials?.password,
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+
+        const url = `${process.env.NEXT_PUBLIC_BASE_URL}${apiRoutes.auth.login}`;
+        const response = await axios.post(url, {
+          email: credentials.email,
+          password: credentials.password,
+        });
+
+        const data = response.data.data;
+        if (!data?.token || !data?.user) return null;
+
+        const payload = data.user; // backend already gives id, email, name, role
+
+        return {
+          id: payload.id,
+          email: payload.email,
+          name: payload.name,
+          role: payload.role as Role,
+          token: data.token,
+          tokenExpiry: Number(new Date(payload.exp * 1000)) || undefined,
         };
-
-        const { data: response }: any = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}${apiRoutes.auth.login}`,
-          payload
-        );
-        if (response.status === 200) {
-          // Any object returned will be saved in `user` property of the JWT
-          return response.data;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-        }
       },
     }),
   ],
-  session: {
-    strategy: 'jwt',
-    maxAge: 900, //after leaving the tab
-  },
+
+  session: { strategy: 'jwt', maxAge: 3600 },
+  pages: { signIn: '/login', error: '/login' },
 
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token = { ...token, ...user };
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.role = (user as any).role;
+        token.token = (user as any).token;
+        token.exp = (user as any).tokenExpiry;
       }
-
-      // Extract the expiration time from the JWT and store it in the token
-      if (token?.token) {
-        //@ts-ignore
-        const decodedToken = JSON.parse(
-          //@ts-ignore
-          Buffer.from(token.token.split('.')[1], 'base64').toString()
-        );
-        token.expiresIn = decodedToken.exp;
-      }
-
       return token;
     },
-    async session({ session, token, user }) {
-      return { ...session, ...token, ...user };
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          id: token.id as string,
+          email: token.email!,
+          name: token.name!,
+          role: token.role as Role,
+        };
+        (session as any).token = token.token;
+      }
+      return session;
     },
   },
-});
+
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: false,
+};
+
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
