@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 import { Role } from '@/src/types/enums/Role.enums';
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: 'credentials',
@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
         const data = response.data.data;
         if (!data?.token || !data?.user) return null;
 
-        const payload = data.user; // backend already gives id, email, name, role
+        const payload = data.user;
 
         return {
           id: payload.id,
