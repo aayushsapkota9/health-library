@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main className="flex flex-col  items-center mt-8">
       <Title order={1} className="text-black">
-        Diseases & Conditions
+        Aayush is Gay !!!
       </Title>
       <section className="mt-10 w-2/3">
         <Tabs defaultValue="search" variant="unstyled" classNames={classes}>
