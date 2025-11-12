@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@commitlint/config-conventional": "^19.2.2",
+    "@darshanpatel2608/human-body-react": "^1.2.9",
     "@emotion/react": "^11.11.3",
     "@emotion/server": "^11.11.0",
     "@fontsource/inter": "^5.0.19",

@@ -1,15 +1,15 @@
-export const TEMPLATE_HTML = `<body>
+export const TEMPLATE_HTML_NEPALI = `<body>
     <section class="first-section">
         <div>
-            <h1 class="first-section-title editable">Name of disease</h1>
+            <h1 class="first-section-title editable">रोगको नाम</h1>
             <div class="editable" id="first-section-description">
-                Small description
+                छोटो विवरण
             </div>
         </div>
     </section>
     <section class="section">
         <div class="section-content">
-            <h2>Overview</h2>
+            <h2>समिक्षा (Overview)</h2>
             <div class="editable">
 
             </div>
@@ -17,50 +17,49 @@ export const TEMPLATE_HTML = `<body>
     </section>
     <section class="section">
         <div class="section-content">
-            <h2>Symptoms</h2>
-            <div class="editable">
-            </div>
-        </div>
-    </section>
-        <section class="section">
-        <div class="section-content">
-            <h2>Causes</h2>
+            <h2>लक्षणहरू</h2>
             <div class="editable">
             </div>
         </div>
     </section>
     <section class="section">
         <div class="section-content">
-            <h2>Management and Treatment</h2>
+            <h2>कारणहरू</h2>
             <div class="editable">
             </div>
         </div>
     </section>
     <section class="section">
         <div class="section-content">
-            <h2>Prevention</h2>
+            <h2>व्यवस्थापन र उपचार</h2>
             <div class="editable">
             </div>
         </div>
     </section>
     <section class="section">
         <div class="section-content">
-            <h2>Living With </h2>
+            <h2>रोकथाम</h2>
             <div class="editable">
             </div>
         </div>
     </section>
     <section class="section">
         <div class="section-content">
-            <h2>Outlook / Prognosis </h2>
+            <h2>यससँग बाँच्ने तरिका</h2>
             <div class="editable">
             </div>
         </div>
     </section>
     <section class="section">
         <div class="section-content">
-            <h5>A note from Doctor
-            </h5>
+            <h2>भविष्यवाणी / दृष्टिकोण</h2>
+            <div class="editable">
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="section-content">
+            <h5>डाक्टरको सन्देश</h5>
             <div class="editable">
             </div>
         </div>
